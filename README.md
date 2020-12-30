@@ -9,6 +9,7 @@
 ### 2. Do the syncing (this can take up to 1 hour, and can use up to 44GB disk space) ##
 	cd sync
 	./get_fox_10.sh [new_fox_10_manifest_directory]
+(if the sync process gets stuck, you might need to terminate it with Ctrl-C and then run the script again)
 
 ## To update the manifest, recovery sources, and vendor trees, follow these steps: ##
 ----------------------------------
