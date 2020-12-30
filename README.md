@@ -28,3 +28,9 @@
 	cd <fox_10_manifest_directory>/vendor/recovery
 	git pull
 
+### 3. To build, using a trivial sample build script, follow these steps: ###
+----------------------------------
+	cd ~/OrangeFox_10/sync
+	./build_fox.sh <device_codename>
+(make sure that you have cloned your device tree to the correct place before doing this!)
+
