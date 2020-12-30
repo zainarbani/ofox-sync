@@ -17,11 +17,11 @@
 
 ## To update only the recovery sources, follow these steps: ##
 ----------------------------------
-	cd [fox_10_manifest_directory]/bootable/recovery
+	cd <fox_10_manifest_directory>/bootable/recovery
 	git pull
 
 ## To update only the vendor tree, follow these steps: ##
 ----------------------------------
-	cd [fox_10_manifest_directory]/vendor/recovery
+	cd <fox_10_manifest_directory>/vendor/recovery
 	git pull
 
