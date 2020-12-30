@@ -2,8 +2,8 @@
 # ***************************************************************************************
 # Script to update the Android 10 minimal manifest (with "repo sync")
 # - Author:  DarthJabba9
-# - Version: 001
-# - Date:    03 November 2020
+# - Version: 002
+# - Date:    30 December 2020
 # ***************************************************************************************
 
 MANIFEST_10_DIR="fox_10_manifest"
@@ -45,13 +45,13 @@ mv bootable/ $BACKUPDIR
 [ "$?" != "0" ] && abort "- Error backing up the OrangeFox recovery sources"
 echo "- Done."
 
-# re-sync
-echo "- Updating the manifest ..."
+# sync the twrp manifest
+echo "- Updating the minimal manifest ..."
 repo sync
 echo "- Done."
 
 echo "- Restoring the OrangeFox recovery sources ..."
-# remove the TWRP bootable/
+# remove the TWRP bootable/ directory
 rm -rf bootable/
 
 # restore the OrangeFox bootable directory
