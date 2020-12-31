@@ -3,12 +3,6 @@
 # Sample trivial build script
 #
 
-# Our starting point (Fox base dir)
-BASE_DIR="$PWD"
-
-# default directory for the new manifest (amend this to match your situation)
-MANIFEST_DIR="$BASE_DIR/fox_10_manifest"
-
 # quit with a message
 abort() {
   echo "$@"
@@ -30,6 +24,18 @@ if [ "$1" = "-h" -o "$1" = "--help" ]; then
    show_help;
 fi
 
+# Our starting point (Fox base dir)
+BASE_DIR="$PWD"
+
+# the saved location of the manifest directory upon successful sync and patch
+SYNC_LOG="$BASE_DIR/manifest.sav"
+if [ -f $SYNC_LOG ]; then
+   source $SYNC_LOG
+fi
+
+# default directory for the new manifest (amend this to match your situation)
+[ -z "$MANIFEST_DIR" ] && MANIFEST_DIR="$BASE_DIR/fox_10_manifest"
+
 # check for the manifest directory
 [ ! -d "$MANIFEST_DIR" ] && abort "Invalid manifest directory: \"$MANIFEST_DIR\""
 
@@ -46,12 +52,12 @@ else
 fi
 
 # exports
-export OUT_DIR=$BASE/BUILDS/"$device"
+export OUT_DIR=$BASE_DIR/BUILDS/"$device"
 export ALLOW_MISSING_DEPENDENCIES=true
 export FOX_USE_TWRP_RECOVERY_IMAGE_BUILDER=1
 export LC_ALL="C"
 export FOX_BUILD_DEVICE="$device"
-export FOX_BUILD_LOG_FILE=$BASE/"$device"_"build.log"
+export FOX_BUILD_LOG_FILE=$BASE_DIR/"$device"_"build.log"
 
 cd $MANIFEST_DIR
 
@@ -77,7 +83,7 @@ mka recoveryimage
 STOP=$(date)
 
 # report
-cd $BASE
+cd $BASE_DIR
 echo "Start time=$START"
 echo "End time  =$STOP"
 exit 0

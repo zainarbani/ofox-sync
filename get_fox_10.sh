@@ -4,8 +4,8 @@
 # - Syncs the twrp-10.0 minimal manifest, and patches it for building OrangeFox
 # - Pulls in the OrangeFox recovery sources and vendor tree
 # - Author:  DarthJabba9
-# - Version: 001
-# - Date:    30 December 2020
+# - Version: 002
+# - Date:    31 December 2020
 # ***************************************************************************************
 
 # Our starting point (Fox base dir)
@@ -13,6 +13,9 @@ BASE_DIR="$PWD";
 
 # default directory for the new manifest
 MANIFEST_DIR="$BASE_DIR/fox_10_manifest/";
+
+# where to log the location of the manifest directory upon successful sync and patch
+SYNC_LOG="$BASE_DIR/manifest.sav";
 
 # help
 if [ "$1" = "-h" -o "$1" = "--help"  -o "$1" = "help" ]; then
@@ -83,7 +86,12 @@ patch_minimal_manifest() {
    echo "-- Patching the $TWRP_10_BRANCH minimal manifest for building OrangeFox for dynamic partition devices ..."
    cd $MANIFEST_BUILD_DIR
    patch -p1 < $PATCH_FILE
-   [ "$?" = "0" ] && echo "-- The $TWRP_10_BRANCH minimal manifest has been patched successfully" || echo "-- Error! Failed to patch the $TWRP_10_BRANCH minimal manifest!"
+   [ "$?" = "0" ] && echo "-- The $TWRP_10_BRANCH minimal manifest has been patched successfully" || abort "-- Failed to patch the $TWRP_10_BRANCH minimal manifest! Quitting."
+
+   # save location of manifest dir
+   echo "#" &> $SYNC_LOG
+   echo "MANIFEST_DIR=$MANIFEST_DIR" >> $SYNC_LOG
+   echo "#" >> $SYNC_LOG
 }
 
 # get the OrangeFox recovery sources

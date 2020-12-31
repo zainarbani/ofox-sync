@@ -2,11 +2,9 @@
 # ***************************************************************************************
 # Script to update the Android 10 minimal manifest (with "repo sync")
 # - Author:  DarthJabba9
-# - Version: 002
-# - Date:    30 December 2020
+# - Version: 003
+# - Date:    31 December 2020
 # ***************************************************************************************
-
-MANIFEST_10_DIR="fox_10_manifest"
 
 # print message and quit
 abort() {
@@ -14,35 +12,71 @@ abort() {
   exit
 }
 
+# Our starting point (Fox base dir)
+BASE_DIR="$PWD"
+
+# the saved location of the manifest directory upon successful sync and patch
+SYNC_LOG="$BASE_DIR/manifest.sav"
+if [ -f $SYNC_LOG ]; then
+   source $SYNC_LOG
+fi
+
+[ -z "$MANIFEST_DIR" ] && MANIFEST_DIR="$BASE_DIR/fox_10_manifest"
+
+# help
+if [ "$1" = "-h" -o "$1" = "--help"  -o "$1" = "help" ]; then
+  echo "Script to update the OrangeFox Android-10.0 build system"
+  echo "Usage   = $0 [fox_10_manifest_directory]"
+  echo "The default manifest directory is \"$MANIFEST_DIR\""
+  exit 0
+fi
+
 # is the fox_10 manifest directory supplied from the command line?
 if [ -n "$1" ]; then 
-   MANIFEST_10_DIR="$1"
-   [ "$1" = "." ] && MANIFEST_10_DIR="$PWD"
+   MANIFEST_DIR="$1"
+   [ "$1" = "." ] && MANIFEST_DIR="$PWD"
 fi
 
 # test whether it is valid
-if [ ! -d $MANIFEST_10_DIR ]; then
+if [ ! -d $MANIFEST_DIR ]; then
+   echo "- Invalid directory: \"$MANIFEST_DIR\""
    abort "Syntax = $0 <fox_10_manifest_directory>"
 fi
 
-cd $MANIFEST_10_DIR
-[ "$?" != "0" ] && abort "- Invalid directory: $MANIFEST_10_DIR"
+cd $MANIFEST_DIR
+[ "$?" != "0" ] && abort "- Invalid directory: $MANIFEST_DIR"
 
 # some more rudimentary checks
-echo "- Checking the directory ($MANIFEST_10_DIR) for validity"
+echo "- Checking the directory ($MANIFEST_DIR) for validity"
 if [ ! -d bootable/ -o ! -d external/ -o ! -d bionic/ -o ! -d system/ -o ! -d toolchain/ ]; then
-   abort "- Invalid manifest directory: $MANIFEST_10_DIR"
+   abort "- Invalid manifest directory: $MANIFEST_DIR"
 fi
 LOC="$PWD"
 echo "- Done."
 
+echo "- The build system to be updated is: \"$MANIFEST_DIR\""
+
 # move the OrangeFox "bootable" directory
 echo "- Backing up the OrangeFox recovery sources"
-BACKUPDIR="fox_bootable"
-[ -d $BACKUPDIR ] && rm -rf $BACKUPDIR
+BOOTABLE_BACKUP="fox_bootable"
+[ -d $BOOTABLE_BACKUP ] && rm -rf $BOOTABLE_BACKUP
 
-mv bootable/ $BACKUPDIR
+mv bootable/ $BOOTABLE_BACKUP
 [ "$?" != "0" ] && abort "- Error backing up the OrangeFox recovery sources"
+echo "- Done."
+
+# move the OrangeFox "device" trees
+echo "- Backing up the OrangeFox device trees"
+DEVICE_BACKUP="fox_devices"
+[ -d $DEVICE_BACKUP ] && rm -rf $DEVICE_BACKUP
+
+mv device/ $DEVICE_BACKUP
+[ "$?" != "0" ] && { 
+	echo "- Restoring the OrangeFox recovery sources ..."
+	rm -rf bootable/
+	mv $BOOTABLE_BACKUP bootable/
+  	abort "- Error backing up the OrangeFox device trees"
+}
 echo "- Done."
 
 # sync the twrp manifest
@@ -55,7 +89,15 @@ echo "- Restoring the OrangeFox recovery sources ..."
 rm -rf bootable/
 
 # restore the OrangeFox bootable directory
-mv $BACKUPDIR bootable/
+mv $BOOTABLE_BACKUP bootable/
+echo "- Done."
+
+echo "- Restoring the OrangeFox device trees ..."
+# remove the TWRP device/ directory
+rm -rf device/
+
+# restore the OrangeFox device directory
+mv $DEVICE_BACKUP device/
 echo "- Done."
 
 # Update OrangeFox sources
