@@ -10,22 +10,22 @@
 
 ### 2. Do the syncing (this can take up to 1 hour, and can use up to 40GB of disk space) ##
 	cd ~/OrangeFox_10/sync
-	./get_fox_10.sh [new_fox_10_manifest_directory]
+	./get_fox_10.sh ~/OrangeFox_10/manifest
 (if the sync process gets stuck, you might need to terminate it with Ctrl-C and then run the script again)
 
 ## To update the manifest, recovery sources, and vendor trees, follow these steps: ##
 ----------------------------------
 	cd ~/OrangeFox_10/sync
-	./update_fox_10.sh [fox_10_manifest_directory]
+	./update_fox_10.sh ~/OrangeFox_10/manifest
 
 ## To update only the recovery sources, follow these steps: ##
 ----------------------------------
-	cd <fox_10_manifest_directory>/bootable/recovery
+	cd ~/OrangeFox_10/manifest/bootable/recovery
 	git pull
 
 ## To update only the vendor tree, follow these steps: ##
 ----------------------------------
-	cd <fox_10_manifest_directory>/vendor/recovery
+	cd ~/OrangeFox_10/manifest/vendor/recovery
 	git pull
 
 ### 3. To build, using a trivial sample build script, follow these steps: ###
