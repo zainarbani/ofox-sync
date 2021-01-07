@@ -2,8 +2,8 @@
 # ***************************************************************************************
 # Script to update the Android 10 minimal manifest (with "repo sync")
 # - Author:  DarthJabba9
-# - Version: 003
-# - Date:    31 December 2020
+# - Version: 004
+# - Date:    07 January 2021
 # ***************************************************************************************
 
 # print message and quit
@@ -21,12 +21,12 @@ if [ -f $SYNC_LOG ]; then
    source $SYNC_LOG
 fi
 
-[ -z "$MANIFEST_DIR" ] && MANIFEST_DIR="$BASE_DIR/fox_10_manifest"
+[ -z "$MANIFEST_DIR" ] && MANIFEST_DIR="$BASE_DIR/fox_10.0"
 
 # help
 if [ "$1" = "-h" -o "$1" = "--help"  -o "$1" = "help" ]; then
   echo "Script to update the OrangeFox Android-10.0 build system"
-  echo "Usage   = $0 [fox_10_manifest_directory]"
+  echo "Usage   = $0 [fox_10.0_manifest_directory]"
   echo "The default manifest directory is \"$MANIFEST_DIR\""
   exit 0
 fi
@@ -40,7 +40,7 @@ fi
 # test whether it is valid
 if [ ! -d $MANIFEST_DIR ]; then
    echo "- Invalid directory: \"$MANIFEST_DIR\""
-   abort "Syntax = $0 <fox_10_manifest_directory>"
+   abort "Syntax = $0 <fox_10.0_manifest_directory>"
 fi
 
 cd $MANIFEST_DIR

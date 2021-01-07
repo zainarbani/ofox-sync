@@ -34,7 +34,7 @@ if [ -f $SYNC_LOG ]; then
 fi
 
 # default directory for the new manifest (amend this to match your situation)
-[ -z "$MANIFEST_DIR" ] && MANIFEST_DIR="$BASE_DIR/fox_10_manifest"
+[ -z "$MANIFEST_DIR" ] && MANIFEST_DIR="$BASE_DIR/fox_10.0"
 
 # check for the manifest directory
 [ ! -d "$MANIFEST_DIR" ] && abort "Invalid manifest directory: \"$MANIFEST_DIR\""

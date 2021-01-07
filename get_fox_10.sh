@@ -4,15 +4,15 @@
 # - Syncs the twrp-10.0 minimal manifest, and patches it for building OrangeFox
 # - Pulls in the OrangeFox recovery sources and vendor tree
 # - Author:  DarthJabba9
-# - Version: 002
-# - Date:    31 December 2020
+# - Version: 003
+# - Date:    07 January 2021
 # ***************************************************************************************
 
 # Our starting point (Fox base dir)
 BASE_DIR="$PWD";
 
 # default directory for the new manifest
-MANIFEST_DIR="$BASE_DIR/fox_10_manifest/";
+MANIFEST_DIR="$BASE_DIR/fox_10.0/";
 
 # where to log the location of the manifest directory upon successful sync and patch
 SYNC_LOG="$BASE_DIR/manifest.sav";
