@@ -4,8 +4,8 @@
 # - Syncs the twrp-10.0 minimal manifest, and patches it for building OrangeFox
 # - Pulls in the OrangeFox recovery sources and vendor tree
 # - Author:  DarthJabba9
-# - Version: 003
-# - Date:    07 January 2021
+# - Version: 004
+# - Date:    07 April 2021
 # ***************************************************************************************
 
 # Our starting point (Fox base dir)
@@ -18,7 +18,7 @@ MANIFEST_DIR="$BASE_DIR/fox_10.0/";
 SYNC_LOG="$BASE_DIR/manifest.sav";
 
 # help
-if [ "$1" = "-h" -o "$1" = "--help"  -o "$1" = "help" ]; then
+if [ "$1" = "-h" -o "$1" = "--help" -o "$1" = "help" ]; then
   echo "Script to set up things for building OrangeFox with the Android-10.0 build system"
   echo "Usage   = $0 [new_manifest_directory]"
   echo "The default new manifest directory is \"$MANIFEST_DIR\""
@@ -28,8 +28,8 @@ fi
 # You can supply a path for the new manifest to override the default
 [ -n "$1" ] && MANIFEST_DIR="$1";
 
-# use SSH for the "git clone" commands; do NOT change this unless it causes problems
-USE_SSH="1"; 
+# by default, don't use SSH for the "git clone" commands; to use SSH, export USE_SSH=1 before starting
+[ -z "$USE_SSH" ] && USE_SSH="0";
 
 # the "diff" file that will be used to patch the original manifest
 PATCH_FILE="$BASE_DIR/patch-manifest.diff";

@@ -13,7 +13,7 @@
 	./get_fox_10.sh ~/OrangeFox_10/fox_10.0
 Notes:
 - If the sync process gets stuck, you might need to terminate it with Ctrl-C and then run the script again
-- If you get login or ssh errors with gitlab, change "USE_SSH" to "0" (zero) in "get_fox_10.sh" and then run it again
+- If you want to use ssh for cloning the OrangeFox sources and vendor tree, export "USE_SSH=1" before starting
 
 ## To update the manifest, recovery sources, and vendor trees, follow these steps: ##
 ----------------------------------
