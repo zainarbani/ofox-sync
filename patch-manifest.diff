@@ -1,10 +1,11 @@
 diff --git a/core/Makefile b/core/Makefile
-index 9a67b88..bce53df 100644
 --- a/core/Makefile
 +++ b/core/Makefile
-@@ -1933,6 +1933,31 @@ define build-recoveryramdisk
+@@ -1932,7 +1932,33 @@ define build-recoveryramdisk
+   # Copying baseline ramdisk...
    # Use rsync because "cp -Rf" fails to overwrite broken symlinks on Mac.
    $(hide) rsync -a --exclude=sdcard $(IGNORE_RECOVERY_SEPOLICY) $(IGNORE_CACHE_LINK) $(TARGET_ROOT_OUT) $(TARGET_RECOVERY_OUT)
++
    # Modifying ramdisk contents...
 +
 +# Darth9
@@ -34,7 +35,7 @@ index 9a67b88..bce53df 100644
    $(if $(filter true,$(BOARD_BUILD_SYSTEM_ROOT_IMAGE)),, \
      $(hide) ln -sf /system/bin/init $(TARGET_RECOVERY_ROOT_OUT)/init)
    $(if $(BOARD_RECOVERY_KERNEL_MODULES), \
-@@ -2090,6 +2115,22 @@ endif
+@@ -2090,6 +2116,22 @@ endif
  .PHONY: recoveryimage
  recoveryimage: $(INSTALLED_RECOVERYIMAGE_TARGET) $(RECOVERY_RESOURCE_ZIP)
  
@@ -58,7 +59,6 @@ index 9a67b88..bce53df 100644
  $(error MTD device is no longer supported and thus BOARD_NAND_PAGE_SIZE is deprecated.)
  endif
 diff --git a/core/board_config.mk b/core/board_config.mk
-index ac0f27d..f3230a5 100644
 --- a/core/board_config.mk
 +++ b/core/board_config.mk
 @@ -177,8 +177,10 @@ endif
@@ -75,7 +75,6 @@ index ac0f27d..f3230a5 100644
  endif
  
 diff --git a/core/config.mk b/core/config.mk
-index 1b94d17..6a969d3 100644
 --- a/core/config.mk
 +++ b/core/config.mk
 @@ -637,6 +637,19 @@ else
@@ -98,8 +97,16 @@ index 1b94d17..6a969d3 100644
  APICHECK_COMMAND := $(JAVA) -Xmx4g -jar $(APICHECK) --no-banner --compatible-output=yes
  
  # Boolean variable determining if the whitelist for compatible properties is enabled
+@@ -898,7 +911,7 @@ $(foreach group,$(call to-upper,$(BOARD_SUPER_PARTITION_GROUPS)), \
+ )
+ 
+ # BOARD_*_PARTITION_LIST: a list of the following tokens
+-valid_super_partition_list := system vendor product product_services odm
++valid_super_partition_list := system vendor product system_ext product_services odm
+ $(foreach group,$(call to-upper,$(BOARD_SUPER_PARTITION_GROUPS)), \
+     $(if $(filter-out $(valid_super_partition_list),$(BOARD_$(group)_PARTITION_LIST)), \
+         $(error BOARD_$(group)_PARTITION_LIST contains invalid partition name \
 diff --git a/core/main.mk b/core/main.mk
-index 338537a..7a11115 100644
 --- a/core/main.mk
 +++ b/core/main.mk
 @@ -285,11 +285,11 @@ enable_target_debugging := true
