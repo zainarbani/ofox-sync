@@ -6,7 +6,7 @@
 ### 1. Fetch these sync tools ###
 	mkdir ~/OrangeFox_10
 	cd ~/OrangeFox_10
-	git clone git@gitlab.com:OrangeFox/sync.git (or "git clone https://gitlab.com/OrangeFox/sync.git")
+	git clone https://gitlab.com/OrangeFox/sync.git (or, using ssh, "git clone git@gitlab.com:OrangeFox/sync.git")
 
 ### 2. Do the syncing (this can take up to 1 hour, and can use up to 40GB of disk space) ##
 	cd ~/OrangeFox_10/sync
