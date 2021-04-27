@@ -94,6 +94,22 @@ patch_minimal_manifest() {
    echo "#" >> $SYNC_LOG
 }
 
+# get the qcom/twrp common stuff
+clone_common() {
+local URL
+   cd $MANIFEST_DIR/
+
+   if [ ! -d "device/qcom/common" ]; then
+   	echo "-- Cloning qcom common ..."
+	git clone https://github.com/TeamWin/android_device_qcom_common -b android-10 device/qcom/common
+   fi
+
+   if [ ! -d "device/qcom/twrp-common" ]; then
+   	echo "-- Cloning twrp-common ..."
+	git clone https://github.com/TeamWin/android_device_qcom_twrp-common -b android-10 device/qcom/twrp-common
+   fi
+}
+
 # get the OrangeFox recovery sources
 clone_fox_recovery() {
 local URL=""
@@ -208,6 +224,7 @@ WorkNow() {
     init_script;
     get_twrp_minimal_manifest;
     patch_minimal_manifest;
+    clone_common;
     clone_fox_recovery;
     clone_fox_vendor;
     # test_build; # comment this out - don't do a test build
