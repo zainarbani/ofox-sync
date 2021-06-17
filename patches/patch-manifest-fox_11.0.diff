@@ -1,0 +1,135 @@
+diff --git a/core/Makefile b/core/Makefile
+--- a/core/Makefile
++++ b/core/Makefile
+@@ -2320,6 +2320,40 @@ endif # BUILDING_RECOVERY_IMAGE
+ .PHONY: recoveryimage
+ recoveryimage: $(INSTALLED_RECOVERYIMAGE_TARGET) $(RECOVERY_RESOURCE_ZIP)
+ 
++# Darth9
++ifneq ($(NOT_ORANGEFOX),1)
++    #ifeq ($(FOX_USE_TWRP_RECOVERY_IMAGE_BUILDER),1)
++	$(BASH) $(FOX_VENDOR) \
++	FOX_VENDOR_CMD="Fox_After_Recovery_Image" \
++  	TARGET_ARCH="$(TARGET_ARCH)" \
++  	FOX_MANIFEST_VER="11.0" \
++	FOX_USE_TWRP_RECOVERY_IMAGE_BUILDER="$(FOX_USE_TWRP_RECOVERY_IMAGE_BUILDER)" \
++  	INSTALLED_RECOVERYIMAGE_TARGET="$(INSTALLED_RECOVERYIMAGE_TARGET)" \
++  	FOX_MANIFEST_ROOT="$(FOX_MANIFEST_ROOT)" \
++  	ANDROID_BUILD_TOP="$(PWD)" \
++	TARGET_OUT="$(TARGET_OUT)" \
++	TARGET_RECOVERY_ROOT_OUT="$(TARGET_RECOVERY_ROOT_OUT)" \
++	OUT_DIR="$(OUT_DIR)" \
++	OUT="$(PRODUCT_OUT)" \
++  	PRODUCT_OUT="$(PRODUCT_OUT)" \
++  	TARGET_RAMDISK_OUT="$(TARGET_RAMDISK_OUT)" \
++  	COMPRESSION_COMMAND_DEPS="$(COMPRESSION_COMMAND_DEPS)" \
++  	COMPRESSION_COMMAND="$(COMPRESSION_COMMAND)" \
++  	INSTALLED_RAMDISK_TARGET="$(INSTALLED_RAMDISK_TARGET)" \
++  	RECOVERY_RAMDISK="$(recovery_ramdisk)" \
++	MKBOOTIMG="$(MKBOOTIMG)" \
++	MKBOOTFS="$(MKBOOTFS)" \
++  	BOARD_BOOTIMAGE_PARTITION_SIZE=$(BOARD_BOOTIMAGE_PARTITION_SIZE) \
++  	BOARD_RECOVERYIMAGE_PARTITION_SIZE=$(BOARD_RECOVERYIMAGE_PARTITION_SIZE) \
++	INTERNAL_RECOVERYIMAGE_ARGS='"$(INTERNAL_RECOVERYIMAGE_ARGS)"' \
++	INTERNAL_MKBOOTIMG_VERSION_ARGS="$(INTERNAL_MKBOOTIMG_VERSION_ARGS)" \
++	BOARD_MKBOOTIMG_ARGS="$(BOARD_MKBOOTIMG_ARGS)" \
++  	INTERNAL_KERNEL_CMDLINE="$(INTERNAL_KERNEL_CMDLINE)" \
++  	BUILD_CMD_COMMAND="$(MKBOOTFS) -d $(TARGET_OUT) $(TARGET_RECOVERY_ROOT_OUT) | $(COMPRESSION_COMMAND) > $(recovery_ramdisk)"
++    #endif
++endif
++# Darth9
++
+ ifneq ($(BOARD_NAND_PAGE_SIZE),)
+ $(error MTD device is no longer supported and thus BOARD_NAND_PAGE_SIZE is deprecated.)
+ endif
+diff --git a/core/config.mk b/core/config.mk
+--- a/core/config.mk
++++ b/core/config.mk
+@@ -670,6 +670,19 @@ EXTRACT_KERNEL := build/make/tools/extract_kernel.py
+ # Path to tools.jar
+ HOST_JDK_TOOLS_JAR := $(ANDROID_JAVA8_HOME)/lib/tools.jar
+ 
++# Darth9
++# OrangeFox post script
++FOX_CURRENT_DEV_STR := $(shell git -C bootable/recovery log -1 --format='%ad (%h)' --date=short)
++ifdef NOT_ORANGEFOX
++  FOX_VENDOR :=
++  BASH :=
++else
++  FOX_VENDOR := vendor/recovery/OrangeFox_A11.sh
++  BASH := bash
++  FOX_USE_TWRP_RECOVERY_IMAGE_BUILDER := 1
++endif
++# Darth9
++
+ APICHECK_COMMAND := $(JAVA) -Xmx4g -jar $(APICHECK) --no-banner --compatible-output=yes
+ 
+ # Boolean variable determining if the allow list for compatible properties is enabled
+diff --git a/envsetup.sh b/envsetup.sh
+--- a/envsetup.sh
++++ b/envsetup.sh
+@@ -327,6 +327,16 @@ function printconfig()
+         return
+     fi
+     get_build_var report_config
++
++    # Darth9
++    if [ "$NOT_ORANGEFOX" = "1" ]; then
++       return
++    fi
++    local DEVICE=${TARGET_PRODUCT//omni_/}
++    DEVICE=${DEVICE//twrp_/}
++    mkdir -p /tmp/$DEVICE
++    export > /tmp/$DEVICE/fox_env.sh
++    # Darth9
+ }
+ 
+ function set_stuff_for_environment()
+@@ -1624,7 +1634,46 @@ function source_vendorsetup() {
+ validate_current_shell
+ source_vendorsetup
+ addcompletions
+-
+ export ANDROID_BUILD_TOP=$(gettop)
+ 
+ . $ANDROID_BUILD_TOP/vendor/twrp/build/envsetup.sh
++
++# Darth9
++# prepare environment variables for importing to OrangeFox_A11.sh
++function orangefox_envsetup() {
++
++    export FOX_MANIFEST_ROOT=$(gettop)
++
++    if [ -z "$NOT_ORANGEFOX" ]; then
++       if [ ! -f $FOX_MANIFEST_ROOT/bootable/recovery/Fox.mk -a ! -f $FOX_MANIFEST_ROOT/bootable/recovery/orangefox.mk ]; then
++   	  export NOT_ORANGEFOX=1
++       fi
++    fi
++
++    if [ "$NOT_ORANGEFOX" = "1" ]; then
++        echo "- Not OrangeFox! ..."
++        return
++    fi
++
++    unset NOT_ORANGEFOX
++    
++    if [ -z "$OUT_DIR" ]; then
++       if [ -n "$OUT" ]; then
++          export OUT_DIR="$OUT"
++       else
++          export OUT_DIR="$FOX_MANIFEST_ROOT/out"
++          export OUT="$OUT_DIR"
++       fi
++    else
++    	if [ -z "$OUT" ]; then
++       	   export OUT="$OUT_DIR"
++    	fi
++    fi
++   # mkdir -p $OUT_DIR/
++   # export > $OUT_DIR/fox_env.sh
++}
++
++orangefox_envsetup
++
++# Darth9
++#
