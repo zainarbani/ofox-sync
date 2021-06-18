@@ -1,7 +1,7 @@
 diff --git a/core/Makefile b/core/Makefile
 --- a/core/Makefile
 +++ b/core/Makefile
-@@ -2320,6 +2320,40 @@ endif # BUILDING_RECOVERY_IMAGE
+@@ -2320,6 +2320,41 @@ endif # BUILDING_RECOVERY_IMAGE
  .PHONY: recoveryimage
  recoveryimage: $(INSTALLED_RECOVERYIMAGE_TARGET) $(RECOVERY_RESOURCE_ZIP)
  
@@ -21,6 +21,7 @@ diff --git a/core/Makefile b/core/Makefile
 +	OUT_DIR="$(OUT_DIR)" \
 +	OUT="$(PRODUCT_OUT)" \
 +  	PRODUCT_OUT="$(PRODUCT_OUT)" \
++  	INSTALLED_RECOVERY_BUILD_PROP_TARGET="$(INSTALLED_RECOVERY_BUILD_PROP_TARGET)" \
 +  	TARGET_RAMDISK_OUT="$(TARGET_RAMDISK_OUT)" \
 +  	COMPRESSION_COMMAND_DEPS="$(COMPRESSION_COMMAND_DEPS)" \
 +  	COMPRESSION_COMMAND="$(COMPRESSION_COMMAND)" \
@@ -68,24 +69,22 @@ diff --git a/core/config.mk b/core/config.mk
 diff --git a/envsetup.sh b/envsetup.sh
 --- a/envsetup.sh
 +++ b/envsetup.sh
-@@ -327,6 +327,16 @@ function printconfig()
+@@ -327,6 +327,14 @@ function printconfig()
          return
      fi
      get_build_var report_config
 +
 +    # Darth9
-+    if [ "$NOT_ORANGEFOX" = "1" ]; then
-+       return
++    if [ "$NOT_ORANGEFOX" != "1" ]; then
++    	local DEVICE=$(cut -d'_' -f2 <<<$TARGET_PRODUCT)
++    	mkdir -p /tmp/$DEVICE
++    	export > /tmp/$DEVICE/fox_env.sh
 +    fi
-+    local DEVICE=${TARGET_PRODUCT//omni_/}
-+    DEVICE=${DEVICE//twrp_/}
-+    mkdir -p /tmp/$DEVICE
-+    export > /tmp/$DEVICE/fox_env.sh
 +    # Darth9
  }
  
  function set_stuff_for_environment()
-@@ -1624,7 +1634,46 @@ function source_vendorsetup() {
+@@ -1624,7 +1632,46 @@ function source_vendorsetup() {
  validate_current_shell
  source_vendorsetup
  addcompletions
