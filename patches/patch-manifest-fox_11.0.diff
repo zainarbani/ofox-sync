@@ -1,7 +1,7 @@
 diff --git a/core/Makefile b/core/Makefile
 --- a/core/Makefile
 +++ b/core/Makefile
-@@ -2217,6 +2217,30 @@ $(recovery_ramdisk): $(MKBOOTFS) $(COMPRESSION_COMMAND_DEPS) \
+@@ -2220,6 +2220,30 @@ $(recovery_ramdisk): $(MKBOOTFS) $(COMPRESSION_COMMAND_DEPS) \
  	# Use rsync because "cp -Rf" fails to overwrite broken symlinks on Mac.
  	rsync -a --exclude=sdcard $(IGNORE_RECOVERY_SEPOLICY) $(IGNORE_CACHE_LINK) $(TARGET_ROOT_OUT) $(TARGET_RECOVERY_OUT)
  	# Modifying ramdisk contents...
@@ -32,7 +32,7 @@ diff --git a/core/Makefile b/core/Makefile
  	$(if $(filter true,$(BOARD_BUILD_SYSTEM_ROOT_IMAGE)),, \
  	  ln -sf /system/bin/init $(TARGET_RECOVERY_ROOT_OUT)/init)
  	# Removes $(TARGET_RECOVERY_ROOT_OUT)/init*.rc EXCEPT init.recovery*.rc.
-@@ -2238,6 +2262,7 @@ $(recovery_ramdisk): $(MKBOOTFS) $(COMPRESSION_COMMAND_DEPS) \
+@@ -2241,6 +2265,7 @@ $(recovery_ramdisk): $(MKBOOTFS) $(COMPRESSION_COMMAND_DEPS) \
  	  cp -f $(recovery_wipe) $(TARGET_RECOVERY_ROOT_OUT)/system/etc/recovery.wipe)
  	ln -sf prop.default $(TARGET_RECOVERY_ROOT_OUT)/default.prop
  	cd $(TARGET_RECOVERY_ROOT_OUT) && touch ramdisk-files.txt && find . | sed "s/.\///" > ramdisk-files.txt
@@ -40,7 +40,7 @@ diff --git a/core/Makefile b/core/Makefile
  	$(BOARD_RECOVERY_IMAGE_PREPARE)
  	$(MKBOOTFS) -d $(TARGET_OUT) $(TARGET_RECOVERY_ROOT_OUT) | $(COMPRESSION_COMMAND) > $(recovery_ramdisk)
  
-@@ -2320,6 +2345,29 @@ endif # BUILDING_RECOVERY_IMAGE
+@@ -2323,6 +2348,29 @@ endif # BUILDING_RECOVERY_IMAGE
  .PHONY: recoveryimage
  recoveryimage: $(INSTALLED_RECOVERYIMAGE_TARGET) $(RECOVERY_RESOURCE_ZIP)
  
@@ -70,17 +70,6 @@ diff --git a/core/Makefile b/core/Makefile
  ifneq ($(BOARD_NAND_PAGE_SIZE),)
  $(error MTD device is no longer supported and thus BOARD_NAND_PAGE_SIZE is deprecated.)
  endif
-@@ -3491,7 +3539,9 @@ BOARD_AVB_VENDOR_BOOT_ADD_HASH_FOOTER_ARGS += \
-     --prop com.android.build.vendor_boot.fingerprint:$(BUILD_FINGERPRINT_FROM_FILE) \
- 
- BOARD_AVB_RECOVERY_ADD_HASH_FOOTER_ARGS += \
--    --prop com.android.build.recovery.fingerprint:$(BUILD_FINGERPRINT_FROM_FILE)
-+    --prop com.android.build.recovery.fingerprint:$(BUILD_FINGERPRINT_FROM_FILE) \
-+    --prop com.android.build.boot.os_version:$(PLATFORM_VERSION) \
-+    --prop com.android.build.boot.security_patch:$(PLATFORM_SECURITY_PATCH)
- 
- BOARD_AVB_VENDOR_ADD_HASHTREE_FOOTER_ARGS += \
-     --prop com.android.build.vendor.fingerprint:$(BUILD_FINGERPRINT_FROM_FILE) \
 diff --git a/core/config.mk b/core/config.mk
 --- a/core/config.mk
 +++ b/core/config.mk
@@ -122,7 +111,7 @@ diff --git a/envsetup.sh b/envsetup.sh
  }
  
  function set_stuff_for_environment()
-@@ -1624,7 +1632,46 @@ function source_vendorsetup() {
+@@ -1624,7 +1632,47 @@ function source_vendorsetup() {
  validate_current_shell
  source_vendorsetup
  addcompletions
@@ -138,7 +127,7 @@ diff --git a/envsetup.sh b/envsetup.sh
 +    export FOX_MANIFEST_ROOT=$(gettop)
 +
 +    if [ -z "$NOT_ORANGEFOX" ]; then
-+       if [ ! -f $FOX_MANIFEST_ROOT/bootable/recovery/Fox.mk -a ! -f $FOX_MANIFEST_ROOT/bootable/recovery/orangefox.mk ]; then
++       if [ ! -f $FOX_MANIFEST_ROOT/bootable/recovery/orangefox_defaults.go -a ! -f $FOX_MANIFEST_ROOT/bootable/recovery/orangefox.mk ]; then
 +   	  export NOT_ORANGEFOX=1
 +       fi
 +    fi
@@ -149,6 +138,7 @@ diff --git a/envsetup.sh b/envsetup.sh
 +    fi
 +
 +    unset NOT_ORANGEFOX
++    export ALLOW_MISSING_DEPENDENCIES=true
 +    
 +    if [ -z "$OUT_DIR" ]; then
 +       if [ -n "$OUT" ]; then
