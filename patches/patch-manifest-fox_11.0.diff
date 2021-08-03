@@ -93,9 +93,9 @@ diff --git a/core/config.mk b/core/config.mk
  APICHECK_COMMAND := $(JAVA) -Xmx4g -jar $(APICHECK) --no-banner --compatible-output=yes
  
  # Boolean variable determining if the allow list for compatible properties is enabled
-diff --git a/envsetup.sh b/envsetup.sh
---- a/envsetup.sh
-+++ b/envsetup.sh
+diff --git a/make/envsetup.sh b/make/envsetup.sh
+--- a/make/envsetup.sh
++++ b/make/envsetup.sh
 @@ -327,6 +327,14 @@ function printconfig()
          return
      fi
@@ -152,8 +152,8 @@ diff --git a/envsetup.sh b/envsetup.sh
 +       	   export OUT="$OUT_DIR"
 +    	fi
 +    fi
-+   # mkdir -p $OUT_DIR/
-+   # export > $OUT_DIR/fox_env.sh
++   export OF_MANUAL_COPY_TWRES=1
++   [ -s $FOX_MANIFEST_ROOT/frameworks/base/services/core/xsd/vts/Android.mk ] && echo -n "" > $FOX_MANIFEST_ROOT/frameworks/base/services/core/xsd/vts/Android.mk
 +}
 +
 +orangefox_envsetup
