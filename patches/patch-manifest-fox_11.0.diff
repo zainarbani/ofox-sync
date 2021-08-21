@@ -1,14 +1,13 @@
 diff --git a/core/Makefile b/core/Makefile
 --- a/core/Makefile
 +++ b/core/Makefile
-@@ -2220,6 +2220,30 @@ $(recovery_ramdisk): $(MKBOOTFS) $(COMPRESSION_COMMAND_DEPS) \
+@@ -2220,6 +2220,28 @@ $(recovery_ramdisk): $(MKBOOTFS) $(COMPRESSION_COMMAND_DEPS) \
  	# Use rsync because "cp -Rf" fails to overwrite broken symlinks on Mac.
  	rsync -a --exclude=sdcard $(IGNORE_RECOVERY_SEPOLICY) $(IGNORE_CACHE_LINK) $(TARGET_ROOT_OUT) $(TARGET_RECOVERY_OUT)
  	# Modifying ramdisk contents...
 +
 +# Darth9
 +ifneq ($(NOT_ORANGEFOX),1)
-+    ifeq ($(FOX_USE_TWRP_RECOVERY_IMAGE_BUILDER),1)
 +	$(BASH) $(FOX_VENDOR) FOX_VENDOR_CMD="Fox_Before_Recovery_Image" \
 +  	FOX_MANIFEST_VER="11.0" \
 +  	TARGET_ARCH="$(TARGET_ARCH)" \
@@ -25,28 +24,18 @@ diff --git a/core/Makefile b/core/Makefile
 +  	BOARD_RECOVERYIMAGE_PARTITION_SIZE=$(BOARD_RECOVERYIMAGE_PARTITION_SIZE) \
 +  	INTERNAL_KERNEL_CMDLINE="$(INTERNAL_KERNEL_CMDLINE)" \
 +  	recovery_ramdisk="$(recovery_ramdisk)"
-+    endif
 +endif
 +# Darth9
 +
  	$(if $(filter true,$(BOARD_BUILD_SYSTEM_ROOT_IMAGE)),, \
  	  ln -sf /system/bin/init $(TARGET_RECOVERY_ROOT_OUT)/init)
  	# Removes $(TARGET_RECOVERY_ROOT_OUT)/init*.rc EXCEPT init.recovery*.rc.
-@@ -2241,6 +2265,7 @@ $(recovery_ramdisk): $(MKBOOTFS) $(COMPRESSION_COMMAND_DEPS) \
- 	  cp -f $(recovery_wipe) $(TARGET_RECOVERY_ROOT_OUT)/system/etc/recovery.wipe)
- 	ln -sf prop.default $(TARGET_RECOVERY_ROOT_OUT)/default.prop
- 	cd $(TARGET_RECOVERY_ROOT_OUT) && touch ramdisk-files.txt && find . | sed "s/.\///" > ramdisk-files.txt
-+
- 	$(BOARD_RECOVERY_IMAGE_PREPARE)
- 	$(MKBOOTFS) -d $(TARGET_OUT) $(TARGET_RECOVERY_ROOT_OUT) | $(COMPRESSION_COMMAND) > $(recovery_ramdisk)
- 
-@@ -2323,6 +2348,29 @@ endif # BUILDING_RECOVERY_IMAGE
+@@ -2324,6 +2346,27 @@ endif # BUILDING_RECOVERY_IMAGE
  .PHONY: recoveryimage
  recoveryimage: $(INSTALLED_RECOVERYIMAGE_TARGET) $(RECOVERY_RESOURCE_ZIP)
  
-+# Darth9 # FOX_USE_TWRP_RECOVERY_IMAGE_BUILDER
++# Darth9
 +ifneq ($(NOT_ORANGEFOX),1)
-+    ifeq ($(FOX_USE_TWRP_RECOVERY_IMAGE_BUILDER),1)
 +	$(BASH) $(FOX_VENDOR) FOX_VENDOR_CMD="Fox_After_Recovery_Image" \
 +  	FOX_MANIFEST_VER="11.0" \
 +  	TARGET_ARCH="$(TARGET_ARCH)" \
@@ -63,7 +52,6 @@ diff --git a/core/Makefile b/core/Makefile
 +  	BOARD_RECOVERYIMAGE_PARTITION_SIZE=$(BOARD_RECOVERYIMAGE_PARTITION_SIZE) \
 +  	INTERNAL_KERNEL_CMDLINE="$(INTERNAL_KERNEL_CMDLINE)" \
 +  	recovery_ramdisk="$(recovery_ramdisk)"
-+    endif
 +endif
 +# Darth9
 +
@@ -73,7 +61,7 @@ diff --git a/core/Makefile b/core/Makefile
 diff --git a/core/config.mk b/core/config.mk
 --- a/core/config.mk
 +++ b/core/config.mk
-@@ -670,6 +670,19 @@ EXTRACT_KERNEL := build/make/tools/extract_kernel.py
+@@ -670,6 +670,18 @@ EXTRACT_KERNEL := build/make/tools/extract_kernel.py
  # Path to tools.jar
  HOST_JDK_TOOLS_JAR := $(ANDROID_JAVA8_HOME)/lib/tools.jar
  
@@ -86,7 +74,6 @@ diff --git a/core/config.mk b/core/config.mk
 +else
 +  FOX_VENDOR := vendor/recovery/OrangeFox_A11.sh
 +  BASH := bash
-+  FOX_USE_TWRP_RECOVERY_IMAGE_BUILDER := 1
 +endif
 +# Darth9
 +
