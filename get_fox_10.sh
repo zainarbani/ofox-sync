@@ -42,7 +42,7 @@ TWRP_10_BRANCH="twrp-10.0";
 MANIFEST_BUILD_DIR="$MANIFEST_DIR/build";
 
 # the device whose tree we can clone for compiling a test build
-test_build_device="mido";
+test_build_device="miatoll";
 
 # print message and quit
 abort() {
