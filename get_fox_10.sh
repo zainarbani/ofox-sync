@@ -4,8 +4,8 @@
 # - Syncs the twrp-10.0 minimal manifest, and patches it for building OrangeFox
 # - Pulls in the OrangeFox recovery sources and vendor tree
 # - Author:  DarthJabba9
-# - Version: 004
-# - Date:    07 April 2021
+# - Version: 005
+# - Date:    31 August 2021
 # ***************************************************************************************
 
 # Our starting point (Fox base dir)
@@ -133,7 +133,7 @@ local URL=""
    }
 
    echo "-- Pulling the OrangeFox recovery sources ..."
-   git clone $URL -b $FOX_10_BRANCH recovery
+   git clone --recurse-submodules $URL -b $FOX_10_BRANCH recovery
    [ "$?" = "0" ] && echo "-- The OrangeFox sources have been cloned successfully" || echo "-- Failed to clone the OrangeFox sources!"
    
    # cleanup /tmp/recovery/
