@@ -3,6 +3,9 @@
 # Sample trivial build script
 #
 
+# the branches we will be dealing with
+FOX_BRANCH="fox_10.0"
+
 # quit with a message
 abort() {
   echo "$@"
@@ -11,7 +14,7 @@ abort() {
 
 # help
 show_help() {
-  echo "Sample script for building OrangeFox with the Android-10.0 build system"
+  echo "Sample script for building OrangeFox with the $FOX_BRANCH build system"
   echo "Usage    = $0 <device_codename> [-c]"
   echo "Arguments:"
   echo "	 device_codename (required)"
@@ -28,13 +31,13 @@ fi
 BASE_DIR="$PWD"
 
 # the saved location of the manifest directory upon successful sync and patch
-SYNC_LOG="$BASE_DIR/manifest.sav"
+SYNC_LOG="$BASE_DIR"/"$FOX_BRANCH"_"manifest.sav"
 if [ -f $SYNC_LOG ]; then
    source $SYNC_LOG
 fi
 
 # default directory for the new manifest (amend this to match your situation)
-[ -z "$MANIFEST_DIR" ] && MANIFEST_DIR="$BASE_DIR/fox_10.0"
+[ -z "$MANIFEST_DIR" ] && MANIFEST_DIR="$BASE_DIR/$FOX_BRANCH"
 
 # check for the manifest directory
 [ ! -d "$MANIFEST_DIR" ] && abort "Invalid manifest directory: \"$MANIFEST_DIR\""
