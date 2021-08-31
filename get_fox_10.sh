@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 # ***************************************************************************************
 # - Script to set up things for building OrangeFox with the Android-10.0 build system
 # - Syncs the twrp-10.0 minimal manifest, and patches it for building OrangeFox
@@ -8,18 +8,26 @@
 # - Date:    31 August 2021
 # ***************************************************************************************
 
+# the branches we will be dealing with
+FOX_BRANCH="fox_10.0";
+TWRP_BRANCH="twrp-10.0";
+DEVICE_BRANCH="android-10";
+
+# the base version of the current OrangeFox
+FOX_BASE_VERSION="R11.1";
+
 # Our starting point (Fox base dir)
 BASE_DIR="$PWD";
 
 # default directory for the new manifest
-MANIFEST_DIR="$BASE_DIR/fox_10.0/";
+MANIFEST_DIR="$BASE_DIR/$FOX_BRANCH";
 
 # where to log the location of the manifest directory upon successful sync and patch
-SYNC_LOG="$BASE_DIR/manifest.sav";
+SYNC_LOG="$BASE_DIR"/"$FOX_BRANCH"_"manifest.sav";
 
 # help
 if [ "$1" = "-h" -o "$1" = "--help" -o "$1" = "help" ]; then
-  echo "Script to set up things for building OrangeFox with the Android-10.0 build system"
+  echo "Script to set up things for building OrangeFox with the $DEVICE_BRANCH build system"
   echo "Usage   = $0 [new_manifest_directory]"
   echo "The default new manifest directory is \"$MANIFEST_DIR\""
   exit 0
@@ -32,12 +40,8 @@ fi
 [ -z "$USE_SSH" ] && USE_SSH="0";
 
 # the "diff" file that will be used to patch the original manifest
-PATCH_FILE="$BASE_DIR/patch-manifest.diff";
+PATCH_FILE="$BASE_DIR/patch-manifest-$FOX_BRANCH.diff";
 
-# the branches we will be dealing with
-FOX_10_BRANCH="fox_10.0";
-TWRP_10_BRANCH="twrp-10.0";
- 
 # the directory in which the patch of the manifest will be executed
 MANIFEST_BUILD_DIR="$MANIFEST_DIR/build";
 
@@ -66,14 +70,14 @@ init_script() {
 get_twrp_minimal_manifest() {
   local MIN_MANIFEST="git://github.com/minimal-manifest-twrp/platform_manifest_twrp_omni.git"
   cd $MANIFEST_DIR
-  echo "-- Initialising the $TWRP_10_BRANCH minimal manifest repo ..."
-  repo init --depth=1 -u $MIN_MANIFEST -b $TWRP_10_BRANCH
+  echo "-- Initialising the $TWRP_BRANCH minimal manifest repo ..."
+  repo init --depth=1 -u $MIN_MANIFEST -b $TWRP_BRANCH
   [ "$?" != "0" ] && {
    abort "-- Failed to initialise the minimal manifest repo. Quitting."
   }
   echo "-- Done."
 
-  echo "-- Syncing the $TWRP_10_BRANCH minimal manifest repo ..."
+  echo "-- Syncing the $TWRP_BRANCH minimal manifest repo ..."
   repo sync
   [ "$?" != "0" ] && {
    abort "-- Failed to Sync the minimal manifest repo. Quitting."
@@ -83,10 +87,10 @@ get_twrp_minimal_manifest() {
 
 # patch the build system for OrangeFox
 patch_minimal_manifest() {
-   echo "-- Patching the $TWRP_10_BRANCH minimal manifest for building OrangeFox for dynamic partition devices ..."
+   echo "-- Patching the $TWRP_BRANCH minimal manifest for building OrangeFox for dynamic partition devices ..."
    cd $MANIFEST_BUILD_DIR
    patch -p1 < $PATCH_FILE
-   [ "$?" = "0" ] && echo "-- The $TWRP_10_BRANCH minimal manifest has been patched successfully" || abort "-- Failed to patch the $TWRP_10_BRANCH minimal manifest! Quitting."
+   [ "$?" = "0" ] && echo "-- The $TWRP_BRANCH minimal manifest has been patched successfully" || abort "-- Failed to patch the $TWRP_BRANCH minimal manifest! Quitting."
 
    # save location of manifest dir
    echo "#" &> $SYNC_LOG
@@ -101,12 +105,12 @@ local URL
 
    if [ ! -d "device/qcom/common" ]; then
    	echo "-- Cloning qcom common ..."
-	git clone https://github.com/TeamWin/android_device_qcom_common -b android-10 device/qcom/common
+	git clone https://github.com/TeamWin/android_device_qcom_common -b $DEVICE_BRANCH device/qcom/common
    fi
 
    if [ ! -d "device/qcom/twrp-common" ]; then
    	echo "-- Cloning twrp-common ..."
-	git clone https://github.com/TeamWin/android_device_qcom_twrp-common -b android-10 device/qcom/twrp-common
+	git clone https://github.com/TeamWin/android_device_qcom_twrp-common -b $DEVICE_BRANCH device/qcom/twrp-common
    fi
 }
 
@@ -133,7 +137,7 @@ local URL=""
    }
 
    echo "-- Pulling the OrangeFox recovery sources ..."
-   git clone --recurse-submodules $URL -b $FOX_10_BRANCH recovery
+   git clone --recurse-submodules $URL -b $FOX_BRANCH recovery
    [ "$?" = "0" ] && echo "-- The OrangeFox sources have been cloned successfully" || echo "-- Failed to clone the OrangeFox sources!"
    
    # cleanup /tmp/recovery/
@@ -163,7 +167,7 @@ local URL
    
    cd $MANIFEST_DIR/vendor
    echo "-- Pulling the OrangeFox vendor tree ..."
-   git clone $URL -b $FOX_10_BRANCH recovery
+   git clone $URL -b $FOX_BRANCH recovery
    [ "$?" = "0" ] && echo "-- The OrangeFox vendor tree has been cloned successfully" || echo "-- Failed to clone the OrangeFox vendor tree!"
 }
 
@@ -180,7 +184,7 @@ local DIR=$MANIFEST_DIR/device/xiaomi
    local URL=git@gitlab.com:OrangeFox/device/"$test_build_device".git
    [ "$USE_SSH" = "0" ] && URL=https://gitlab.com/OrangeFox/device/"$test_build_device".git
    echo "-- Pulling the $test_build_device device tree ..."
-   git clone $URL -b $FOX_10_BRANCH"_test" "$test_build_device"
+   git clone $URL -b $FOX_BRANCH"_test" "$test_build_device"
 
    # done
    if [ -d "$test_build_device" -a -d "$test_build_device/recovery" ]; then
@@ -195,8 +199,8 @@ test_build() {
    # clone the device tree
    get_device_tree
 
-   # proceed with the test build   
-   export FOX_VERSION="R11.0_0_fox_10"
+   # proceed with the test build
+   export FOX_VERSION="$FOX_BASE_VERSION"_"$FOX_BRANCH"
    export FOX_BUILD_TYPE="Alpha"
    export ALLOW_MISSING_DEPENDENCIES=true
    export FOX_USE_TWRP_RECOVERY_IMAGE_BUILDER=1
@@ -222,10 +226,10 @@ test_build() {
 WorkNow() {
     local START=$(date);
     init_script;
-    get_twrp_minimal_manifest;
-    patch_minimal_manifest;
-    clone_common;
-    clone_fox_recovery;
+#    get_twrp_minimal_manifest;
+#    patch_minimal_manifest;
+#    clone_common;
+#    clone_fox_recovery;
     clone_fox_vendor;
     # test_build; # comment this out - don't do a test build
     local STOP=$(date);

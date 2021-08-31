@@ -2,9 +2,13 @@
 # ***************************************************************************************
 # Script to update the Android 10 minimal manifest (with "repo sync")
 # - Author:  DarthJabba9
-# - Version: 004
-# - Date:    07 January 2021
+# - Version: 005
+# - Date:    31 August 2021
 # ***************************************************************************************
+
+# the branches we will be dealing with
+FOX_BRANCH="fox_10.0"
+DEVICE_BRANCH="android-10"
 
 # print message and quit
 abort() {
@@ -16,17 +20,17 @@ abort() {
 BASE_DIR="$PWD"
 
 # the saved location of the manifest directory upon successful sync and patch
-SYNC_LOG="$BASE_DIR/manifest.sav"
+SYNC_LOG="$BASE_DIR"/"$FOX_BRANCH"_"manifest.sav"
 if [ -f $SYNC_LOG ]; then
    source $SYNC_LOG
 fi
 
-[ -z "$MANIFEST_DIR" ] && MANIFEST_DIR="$BASE_DIR/fox_10.0"
+[ -z "$MANIFEST_DIR" ] && MANIFEST_DIR="$BASE_DIR/$FOX_BRANCH"
 
 # help
 if [ "$1" = "-h" -o "$1" = "--help"  -o "$1" = "help" ]; then
-  echo "Script to update the OrangeFox Android-10.0 build system"
-  echo "Usage   = $0 [fox_10.0_manifest_directory]"
+  echo "Script to update the $FOX_BRANCH build system"
+  echo "Usage   = $0 [$FOX_BRANCH-manifest_directory]"
   echo "The default manifest directory is \"$MANIFEST_DIR\""
   exit 0
 fi
@@ -40,7 +44,7 @@ fi
 # test whether it is valid
 if [ ! -d $MANIFEST_DIR ]; then
    echo "- Invalid directory: \"$MANIFEST_DIR\""
-   abort "Syntax = $0 <fox_10.0_manifest_directory>"
+   abort "Syntax = $0 <$FOX_BRANCH-manifest_directory>"
 fi
 
 cd $MANIFEST_DIR
