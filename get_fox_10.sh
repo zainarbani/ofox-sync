@@ -4,8 +4,8 @@
 # - Syncs the twrp-10.0 minimal manifest, and patches it for building OrangeFox
 # - Pulls in the OrangeFox recovery sources and vendor tree
 # - Author:  DarthJabba9
-# - Version: 005
-# - Date:    31 August 2021
+# - Version: 005a
+# - Date:    01 September 2021
 # ***************************************************************************************
 
 # the branches we will be dealing with
@@ -226,10 +226,10 @@ test_build() {
 WorkNow() {
     local START=$(date);
     init_script;
-#    get_twrp_minimal_manifest;
-#    patch_minimal_manifest;
-#    clone_common;
-#    clone_fox_recovery;
+    get_twrp_minimal_manifest;
+    patch_minimal_manifest;
+    clone_common;
+    clone_fox_recovery;
     clone_fox_vendor;
     # test_build; # comment this out - don't do a test build
     local STOP=$(date);
