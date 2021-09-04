@@ -139,7 +139,7 @@ diff --git a/make/envsetup.sh b/make/envsetup.sh
 +       	   export OUT="$OUT_DIR"
 +    	fi
 +    fi
-+   export OF_MANUAL_COPY_TWRES=1
++   # export OF_MANUAL_COPY_TWRES=1
 +   [ -s $FOX_MANIFEST_ROOT/frameworks/base/services/core/xsd/vts/Android.mk ] && echo -n "" > $FOX_MANIFEST_ROOT/frameworks/base/services/core/xsd/vts/Android.mk
 +}
 +
