@@ -1,4 +1,4 @@
-# Sync twrp 10.0 or 11.0 minimal manifest and patch it for building OrangeFox for native Android 10/Android 11 devices
+# Sync the twrp Android 10.0 or 11.0 minimal manifest and patch it for building OrangeFox for native Android 10/Android 11 devices
 
 ## To fetch the manifest for the first time, follow these steps: ##
 ------------------------------------
