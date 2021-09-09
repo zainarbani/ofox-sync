@@ -1,9 +1,9 @@
-# Sync twrp-10.0 minimal manifest and patch it for building OrangeFox for dynamic partition devices
+# Sync twrp 10.0 or 11.0 minimal manifest and patch it for building OrangeFox for native Android 10/Android 11 devices
 
 ## To fetch the manifest for the first time, follow these steps: ##
 ------------------------------------
 
-### 1. Fetch these sync tools ###
+### 1. Fetch these sync tools (for the 11.0 manifest, change "10" to "11") ###
 	mkdir ~/OrangeFox_10
 	cd ~/OrangeFox_10
 	git clone https://gitlab.com/OrangeFox/sync.git (or, using ssh, "git clone git@gitlab.com:OrangeFox/sync.git")
@@ -15,7 +15,7 @@ Notes:
 - If the sync process gets stuck, you might need to terminate it with Ctrl-C and then run the script again
 - If you want to use ssh for cloning the OrangeFox sources and vendor tree, export "USE_SSH=1" before starting
 
-## To update the manifest, recovery sources, and vendor trees, follow these steps: ##
+## To update the manifest (10.0 only), recovery sources, and vendor trees, follow these steps: ##
 ----------------------------------
 	cd ~/OrangeFox_10/sync
 	./update_fox_10.sh ~/OrangeFox_10/fox_10.0
