@@ -36,3 +36,6 @@ Notes:
 	./build_fox.sh <device_codename>
 (make sure that you have cloned your device tree to the correct place before doing this!)
 
+## Notes on fox_11.0 ##
+- The fox_11.0 sources are not ready. The "11.0" sync code here is just a placeholder for when the fox_11.0 sources are released.
+- If you try to clone the fox_11.0 sources now, the process will eventually terminate with an error.
