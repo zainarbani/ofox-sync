@@ -1,7 +1,7 @@
 diff --git a/core/Makefile b/core/Makefile
 --- a/core/Makefile
 +++ b/core/Makefile
-@@ -2220,6 +2220,29 @@ $(recovery_ramdisk): $(MKBOOTFS) $(COMPRESSION_COMMAND_DEPS) \
+@@ -2220,6 +2220,30 @@ $(recovery_ramdisk): $(MKBOOTFS) $(COMPRESSION_COMMAND_DEPS) \
  	# Use rsync because "cp -Rf" fails to overwrite broken symlinks on Mac.
  	rsync -a --exclude=sdcard $(IGNORE_RECOVERY_SEPOLICY) $(IGNORE_CACHE_LINK) $(TARGET_ROOT_OUT) $(TARGET_RECOVERY_OUT)
  	# Modifying ramdisk contents...
@@ -10,6 +10,7 @@ diff --git a/core/Makefile b/core/Makefile
 +ifneq ($(NOT_ORANGEFOX),1)
 +	$(BASH) $(FOX_VENDOR) FOX_VENDOR_CMD="Fox_Before_Recovery_Image" \
 +  	FOX_MANIFEST_VER="11.0" \
++  	BOARD_BOOT_HEADER_VERSION="$(BOARD_BOOT_HEADER_VERSION)" \
 +  	TARGET_ARCH="$(TARGET_ARCH)" \
 +	TARGET_RECOVERY_ROOT_OUT="$(TARGET_RECOVERY_ROOT_OUT)" \
 +	MKBOOTIMG="$(MKBOOTIMG)" \
@@ -31,7 +32,7 @@ diff --git a/core/Makefile b/core/Makefile
  	$(if $(filter true,$(BOARD_BUILD_SYSTEM_ROOT_IMAGE)),, \
  	  ln -sf /system/bin/init $(TARGET_RECOVERY_ROOT_OUT)/init)
  	# Removes $(TARGET_RECOVERY_ROOT_OUT)/init*.rc EXCEPT init.recovery*.rc.
-@@ -2300,6 +2323,30 @@ ifeq ($(BOARD_USES_RECOVERY_AS_BOOT),true)
+@@ -2300,6 +2324,31 @@ ifeq ($(BOARD_USES_RECOVERY_AS_BOOT),true)
  $(INSTALLED_BOOTIMAGE_TARGET): $(recoveryimage-deps)
  	$(call pretty,"Target boot image from recovery: $@")
  	$(call build-recoveryimage-target, $@, $(PRODUCT_OUT)/$(subst .img,,$(subst boot,kernel,$(notdir $@))))
@@ -40,6 +41,7 @@ diff --git a/core/Makefile b/core/Makefile
 +ifneq ($(NOT_ORANGEFOX),1)
 +	$(BASH) $(FOX_VENDOR) FOX_VENDOR_CMD="Fox_After_Recovery_Image" \
 +  	FOX_MANIFEST_VER="11.0" \
++  	BOARD_BOOT_HEADER_VERSION="$(BOARD_BOOT_HEADER_VERSION)" \
 +  	TARGET_ARCH="$(TARGET_ARCH)" \
 +	TARGET_RECOVERY_ROOT_OUT="$(TARGET_RECOVERY_ROOT_OUT)" \
 +	MKBOOTIMG="$(MKBOOTIMG)" \
@@ -62,7 +64,7 @@ diff --git a/core/Makefile b/core/Makefile
  endif # BOARD_USES_RECOVERY_AS_BOOT
  
  $(INSTALLED_RECOVERYIMAGE_TARGET): $(recoveryimage-deps)
-@@ -2324,6 +2371,31 @@ endif # BUILDING_RECOVERY_IMAGE
+@@ -2324,6 +2373,32 @@ endif # BUILDING_RECOVERY_IMAGE
  .PHONY: recoveryimage
  recoveryimage: $(INSTALLED_RECOVERYIMAGE_TARGET) $(RECOVERY_RESOURCE_ZIP)
  
@@ -71,6 +73,7 @@ diff --git a/core/Makefile b/core/Makefile
 +ifneq ($(BOARD_USES_RECOVERY_AS_BOOT),true)
 +	$(BASH) $(FOX_VENDOR) FOX_VENDOR_CMD="Fox_After_Recovery_Image" \
 +  	FOX_MANIFEST_VER="11.0" \
++  	BOARD_BOOT_HEADER_VERSION="$(BOARD_BOOT_HEADER_VERSION)" \
 +  	TARGET_ARCH="$(TARGET_ARCH)" \
 +	TARGET_RECOVERY_ROOT_OUT="$(TARGET_RECOVERY_ROOT_OUT)" \
 +	MKBOOTIMG="$(MKBOOTIMG)" \
