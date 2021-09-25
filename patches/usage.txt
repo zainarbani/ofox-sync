@@ -1,10 +1,15 @@
-Using these patch files to patch a twrp manifest for building OrangeFox:
+**NOTE**:
+The patches in this directory are for my own personal use, and are *unsupported*.
+No questions will be answered about them. Use entirely at your own risk.
 
-1. Sync the relevant twrp manifest, with the correct branch
-2. Change to the manifest's "build" directory
-3. Run the command: patch -p1 < patch-manifest-fox_"X".diff ("X" = the branch version: eg, 10.0, 7.1, 6.0, etc)
-4. Change to the manifest's "bootable" directory
-5. Remove the "recovery" directory, and clone the OrangeFox sources into a new "recovery" directory 
-6. Change to the manifest's "vendor" directory
-7. Clone the OrangeFox vendor tree into a new "recovery" directory
+
+Using these patch files to patch a twrp minimal manifest for building OrangeFox:
+
+1. Sync the relevant twrp minimal manifest, with the correct branch
+2. Change to the manifest's "build" subdirectory
+3. Run the command: patch -p1 < patch-manifest-fox_"X".diff ("X" = the branch version: eg, 9.0, 7.1, 6.0, etc)
+4. Change to the manifest's "bootable" subdirectory
+5. Remove the "recovery" subdirectory, and clone the OrangeFox sources into a new "recovery" subdirectory
+6. Change to the manifest's "vendor" subdirectory
+7. Clone the OrangeFox vendor tree into a new "recovery" subdirectory
 
