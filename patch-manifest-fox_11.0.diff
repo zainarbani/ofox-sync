@@ -137,11 +137,7 @@ diff --git a/make/envsetup.sh b/make/envsetup.sh
  }
  
  function set_stuff_for_environment()
-@@ -1624,7 +1632,47 @@ function source_vendorsetup() {
- validate_current_shell
- source_vendorsetup
- addcompletions
--
+@@ -1629,3 +1637,44 @@ addcompletions
  export ANDROID_BUILD_TOP=$(gettop)
  
  . $ANDROID_BUILD_TOP/vendor/twrp/build/envsetup.sh
