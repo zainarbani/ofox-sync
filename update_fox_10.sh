@@ -2,8 +2,8 @@
 # ***************************************************************************************
 # Script to update the Android 10 minimal manifest (with "repo sync")
 # - Author:  DarthJabba9
-# - Version: 005
-# - Date:    31 August 2021
+# - Version: 006
+# - Date:    02 November 2021
 # ***************************************************************************************
 
 # the branches we will be dealing with
@@ -107,7 +107,7 @@ echo "- Done."
 # Update OrangeFox sources
 echo "- Updating the OrangeFox recovery sources ..."
 cd $LOC/bootable/recovery
-git pull
+git pull --recurse-submodules
 echo "- Done."
 
 # Update OrangeFox vendor tree

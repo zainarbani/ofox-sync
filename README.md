@@ -23,7 +23,7 @@ Notes:
 ## To update only the recovery sources, follow these steps: ##
 ----------------------------------
 	cd ~/OrangeFox_10/fox_10.0/bootable/recovery
-	git pull
+	git pull --recurse-submodules
 
 ## To update only the vendor tree, follow these steps: ##
 ----------------------------------
