@@ -4,8 +4,8 @@
 # - Syncs the relevant twrp minimal manifest, and patches it for building OrangeFox
 # - Pulls in the OrangeFox recovery sources and vendor tree
 # - Author:  DarthJabba9
-# - Version: fox_11.0:001
-# - Date:    09 September 2021
+# - Version: fox_11.0:002
+# - Date:    06 November 2021
 # ***************************************************************************************
 
 # the branches we will be dealing with
@@ -139,6 +139,19 @@ local BRANCH=$FOX_BRANCH;
    echo "-- Pulling the OrangeFox recovery sources ...";
    git clone --recurse-submodules $URL -b $BRANCH recovery;
    [ "$?" = "0" ] && echo "-- The OrangeFox sources have been cloned successfully" || echo "-- Failed to clone the OrangeFox sources!";
+
+   # check that the themes are correctly downloaded
+   if [ ! -f recovery/gui/theme/portrait_hdpi/ui.xml ]; then
+      	echo "-- Themes not found! Trying again to pull the themes ...";
+   	if [ "$USE_SSH" = "0" ]; then
+      	   URL="https://gitlab.com/OrangeFox/misc/theme.git";
+   	else
+      	   URL="git@gitlab.com:OrangeFox/misc/theme.git";
+   	fi
+      	[ -d recovery/gui/theme ] && rm -rf recovery/gui/theme;
+      	git clone $URL recovery/gui/theme;
+      	[ "$?" = "0" ] && echo "-- The themes have been cloned successfully" || echo "-- Failed to clone the themes!";
+   fi
    
    # cleanup /tmp/recovery/
    echo  "-- Cleaning up the TWRP recovery sources from /tmp";
