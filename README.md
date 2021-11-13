@@ -1,41 +1,57 @@
-# Sync the twrp Android 10.0 or 11.0 minimal manifest and patch it for building OrangeFox for native Android 10/Android 11 devices
+# Sync a twrp minimal manifest, patch it for building OrangeFox, and sync the OrangeFox sources
 
 ## To fetch the manifest for the first time, follow these steps: ##
 ------------------------------------
 
-### 1. Fetch these sync tools (for the 11.0 manifest, change "10" to "11") ###
-	mkdir ~/OrangeFox_10
-	cd ~/OrangeFox_10
+### 1. Fetch these sync tools ###
+	mkdir ~/OrangeFox_sync
+	cd ~/OrangeFox_sync
 	git clone https://gitlab.com/OrangeFox/sync.git (or, using ssh, "git clone git@gitlab.com:OrangeFox/sync.git")
 
-### 2. Do the syncing (this can take up to 1 hour, and can use up to 40GB of disk space) ##
-	cd ~/OrangeFox_10/sync
-	./get_fox_10.sh ~/OrangeFox_10/fox_10.0
+### 2. Do the syncing (this can take up to 1 hour, and can use up to 40GB of disk space) - below is an example, for 10.0 (amend as required for other branches) ##
+	cd ~/OrangeFox_sync/sync/
+	./orangefox_sync.sh --branch 10.0 --path ~/fox_10.0
 Notes:
 - If the sync process gets stuck, you might need to terminate it with Ctrl-C and then run the script again
-- If you want to use ssh for cloning the OrangeFox sources and vendor tree, export "USE_SSH=1" before starting
+- If you want to use ssh for cloning the OrangeFox sources and vendor tree, export "USE_SSH=1" before starting, or supply "--ssh 1" on the command line
+- After the initial sync process, you must then clone your device trees, before you can build for your device
 
-## To update the manifest (10.0 only), recovery sources, and vendor trees, follow these steps: ##
+## These manifest branches are supported by the orangefox_sync.sh script: ##
 ----------------------------------
-	cd ~/OrangeFox_10/sync
-	./update_fox_10.sh ~/OrangeFox_10/fox_10.0
+	11.0
+	10.0
+	9.0
+	8.1
+	7.1
+	6.0
 
-## To update only the recovery sources, follow these steps: ##
+## To update the manifest, and the recovery sources, and the vendor trees (given the example of the 10.0 branch above), follow these steps: ##
 ----------------------------------
-	cd ~/OrangeFox_10/fox_10.0/bootable/recovery
+	cd ~/fox_10.0/
+	repo sync (ignore any notifications about not being to update bootable/recovery and any suggestions given about that)
+	cd ~/fox_10.0/bootable/recovery/
 	git pull --recurse-submodules
-
-## To update only the vendor tree, follow these steps: ##
-----------------------------------
-	cd ~/OrangeFox_10/fox_10.0/vendor/recovery
+	cd ~/fox_10.0/vendor/recovery/
 	git pull
 
-### 3. To build, using a trivial sample build script, follow these steps: ###
+## To update only the recovery sources (given the example of the 10.0 branch above), follow these steps: ##
 ----------------------------------
-	cd ~/OrangeFox_10/sync
-	./build_fox.sh <device_codename>
-(make sure that you have cloned your device tree to the correct place before doing this!)
+	cd ~/fox_10.0/bootable/recovery/
+	git pull --recurse-submodules
 
-## Notes on fox_11.0 ##
-- The fox_11.0 sources are not ready. The "11.0" sync code here is just a placeholder for when the fox_11.0 sources are released.
-- If you try to clone the fox_11.0 sources now, the process will eventually terminate with an error.
+## To update only the vendor tree (given the example of the 10.0 branch above) follow these steps: ##
+----------------------------------
+	cd ~/fox_10.0/vendor/recovery/
+	git pull
+
+## To update only the manifest (given the example of the 10.0 branch above), follow these steps: ##
+----------------------------------
+	cd ~/fox_10.0/
+	repo sync (ignore any notifications about not being to update bootable/recovery and any suggestions given about that)
+
+## To see the syntax of the orangefox_sync.sh script, follow these steps: ##
+----------------------------------
+	cd ~/OrangeFox_sync/sync/
+	./orangefox_sync.sh --help
+
+
