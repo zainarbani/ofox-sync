@@ -28,7 +28,7 @@ Notes:
 ## To update the manifest, and the recovery sources, and the vendor trees (given the example of the 10.0 branch above), follow these steps: ##
 ----------------------------------
 	cd ~/fox_10.0/
-	repo sync (ignore any notifications about not being to update bootable/recovery and any suggestions given about that)
+	repo sync (ignore all errors and suggestions relating to "android_bootable_recovery")
 	cd ~/fox_10.0/bootable/recovery/
 	git pull --recurse-submodules
 	cd ~/fox_10.0/vendor/recovery/
@@ -47,11 +47,10 @@ Notes:
 ## To update only the manifest (given the example of the 10.0 branch above), follow these steps: ##
 ----------------------------------
 	cd ~/fox_10.0/
-	repo sync (ignore any notifications about not being to update bootable/recovery and any suggestions given about that)
+	repo sync (ignore all errors and suggestions relating to "android_bootable_recovery")
 
 ## To see the syntax of the orangefox_sync.sh script, follow these steps: ##
 ----------------------------------
 	cd ~/OrangeFox_sync/sync/
 	./orangefox_sync.sh --help
-
 
