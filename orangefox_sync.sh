@@ -1,15 +1,15 @@
-#!/bin/bash
+#!/bin/bash -x
 # ***************************************************************************************
 # - Script to set up things for building OrangeFox with a minimal build system
 # - Syncs the relevant twrp minimal manifest, and patches it for building OrangeFox
 # - Pulls in the OrangeFox recovery sources and vendor tree
 # - Author:  DarthJabba9
-# - Version: generic:001
-# - Date:    13 November 2021
+# - Version: generic:002
+# - Date:    17 November 2021
 # ***************************************************************************************
 
 # the version number of this script
-SCRIPT_VERSION="20211113";
+SCRIPT_VERSION="20211117";
 
 # the base version of the current OrangeFox
 FOX_BASE_VERSION="R11.1";
@@ -37,7 +37,7 @@ do_fox_100() {
 	BASE_VER=10;
 	FOX_BRANCH="fox_10.0";
 	FOX_DEF_BRANCH="fox_10.0";
-	TWRP_BRANCH="twrp-10.0";
+	TWRP_BRANCH="twrp-10.0-deprecated";
 	DEVICE_BRANCH="android-10";
 	test_build_device="miatoll";
 	MIN_MANIFEST="https://github.com/minimal-manifest-twrp/platform_manifest_twrp_omni.git";
