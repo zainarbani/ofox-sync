@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 # ***************************************************************************************
 # - Script to set up things for building OrangeFox with a minimal build system
 # - Syncs the relevant twrp minimal manifest, and patches it for building OrangeFox
