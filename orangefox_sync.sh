@@ -4,12 +4,12 @@
 # - Syncs the relevant twrp minimal manifest, and patches it for building OrangeFox
 # - Pulls in the OrangeFox recovery sources and vendor tree
 # - Author:  DarthJabba9
-# - Version: generic:002
-# - Date:    17 November 2021
+# - Version: generic:003
+# - Date:    21 November 2021
 # ***************************************************************************************
 
 # the version number of this script
-SCRIPT_VERSION="20211117";
+SCRIPT_VERSION="20211121";
 
 # the base version of the current OrangeFox
 FOX_BASE_VERSION="R11.1";
@@ -96,7 +96,7 @@ help_screen() {
   echo "    -h, -H, --help 			print this help screen and quit";
   echo "    -d, -D, --debug 			debug mode: print each command being executed";
   echo "    -s, -S, --ssh <'0' or '1'>		set 'USE_SSH' to '0' or '1'";
-  echo "    -p, -P, --path <path>		sync the minimal manifest into the directory '<path>'";
+  echo "    -p, -P, --path <absolute_path>	sync the minimal manifest into the directory '<absolute_path>'";
   echo "    -b, -B, --branch <branch>		get the minimal manifest for '<branch>'";
   echo "    	'<branch>' must be one of the following branches:";
   echo "    		11.0";
@@ -105,11 +105,13 @@ help_screen() {
   echo "    		8.1";
   echo "    		7.1";
   echo "    		6.0";
-  echo "Example:";
+  echo "Examples:";
   echo "    $0 --branch 11.0 --path ~/OrangeFox_11 --ssh 1";
+  echo "    $0 --branch 9.0 --path ~/OrangeFox/9.0 --debug";
   echo "";
-  echo "The default manifest directory is \"$MANIFEST_DIR\"";
-  echo "The default minimal manifest branch is \"twrp-10\"";
+  echo "- The default manifest directory is \"$MANIFEST_DIR\"";
+  echo "- The default minimal manifest branch is \"twrp-10\"";
+  echo "- You must supply an *absolute* path for the '--path' switch";
   exit 0;
 }
 
