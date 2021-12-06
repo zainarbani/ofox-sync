@@ -248,12 +248,8 @@ clone_common() {
    fi
 
    if [ ! -d "device/qcom/twrp-common" ]; then
-   	if [ "$BASE_VER" -ge 8 ]; then
-   	   echo "-- Cloning twrp-common ...";
-   	   git clone https://github.com/TeamWin/android_device_qcom_twrp-common -b $DEVICE_BRANCH device/qcom/twrp-common;
-	else
-   	   echo "-- The twrp-common repository does not exist for the $DEVICE_BRANCH branch.";
-	fi
+   	echo "-- Cloning twrp-common ...";
+   	git clone https://github.com/TeamWin/android_device_qcom_twrp-common -b $DEVICE_BRANCH device/qcom/twrp-common;
    fi
 }
 
