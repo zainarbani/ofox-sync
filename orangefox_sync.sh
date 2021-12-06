@@ -4,12 +4,12 @@
 # - Syncs the relevant twrp minimal manifest, and patches it for building OrangeFox
 # - Pulls in the OrangeFox recovery sources and vendor tree
 # - Author:  DarthJabba9
-# - Version: generic:003
-# - Date:    21 November 2021
+# - Version: generic:004
+# - Date:    06 December 2021
 # ***************************************************************************************
 
 # the version number of this script
-SCRIPT_VERSION="20211121";
+SCRIPT_VERSION="20211206";
 
 # the base version of the current OrangeFox
 FOX_BASE_VERSION="R11.1";
@@ -122,29 +122,29 @@ Process_CMD_Line() {
    if [ -z "$1" ]; then
       help_screen;
    fi
- 
+
    while (( "$#" )); do
-        
+
         case "$1" in
             # debug mode - show some verbose outputs
                 -d | -D | --debug)
                         set -o xtrace;
                 ;;
-             # help   
+             # help
                 -h | -H | --help)
                         help_screen;
                 ;;
-             # ssh   
+             # ssh
                 -s | -S | --ssh)
                         shift;
                         [ "$1" = "0" -o "$1" = "1" ] && USE_SSH=$1 || USE_SSH=0;
                 ;;
-             # path   
+             # path
                 -p | -P | --path)
                         shift;
                         [ -n "$1" ] && MANIFEST_DIR=$1;
                 ;;
-             # branch   
+             # branch
                 -b | -B | --branch)
                 	shift;
                  	if [ "$1" = "11.0" ]; then do_fox_110;
@@ -158,7 +158,7 @@ Process_CMD_Line() {
                   	   	do_fox_100;
                 	fi
                 ;;
-        
+
         esac
      shift
    done
@@ -296,11 +296,11 @@ local BRANCH=$FOX_BRANCH;
       	git clone $URL recovery/gui/theme;
       	[ "$?" = "0" ] && echo "-- The themes have been cloned successfully" || echo "-- Failed to clone the themes!";
    fi
-   
+
    # cleanup /tmp/recovery/
    echo  "-- Cleaning up the TWRP recovery sources from /tmp";
    rm -rf /tmp/recovery;
-   
+
    # create the directory for Xiaomi device trees
    mkdir -p $MANIFEST_DIR/device/xiaomi;
 }
@@ -316,7 +316,7 @@ local BRANCH=$FOX_BRANCH;
    else
       URL="git@gitlab.com:OrangeFox/vendor/recovery.git";
    fi
-   
+
    echo "-- Preparing for cloning the OrangeFox vendor tree ...";
    rm -rf $MANIFEST_DIR/vendor/recovery;
    mkdir -p $MANIFEST_DIR/vendor;
@@ -324,11 +324,30 @@ local BRANCH=$FOX_BRANCH;
       echo "-- Invalid directory: $MANIFEST_DIR/vendor";
       return;
    }
-   
+
    cd $MANIFEST_DIR/vendor;
    echo "-- Pulling the OrangeFox vendor tree ...";
    git clone $URL -b $BRANCH recovery;
    [ "$?" = "0" ] && echo "-- The OrangeFox vendor tree has been cloned successfully" || echo "-- Failed to clone the OrangeFox vendor tree!";
+}
+
+# get the OrangeFox busybox sources
+clone_fox_busybox() {
+local URL="";
+local BRANCH="android-9.0";
+   [ "$BASE_VER" -gt 9 ] && return; # no busybox for anything higher than 9.0!
+
+   if [ "$USE_SSH" = "0" ]; then
+      URL="https://gitlab.com/OrangeFox/external/busybox.git";
+   else
+      URL="git@gitlab.com:OrangeFox/external/busybox.git";
+   fi
+
+   echo "-- Preparing for cloning the OrangeFox busybox sources ...";
+   cd $MANIFEST_DIR/external;
+   echo "-- Pulling the OrangeFox busybox sources ...";
+   git clone $URL -b $BRANCH busybox;
+   [ "$?" = "0" ] && echo "-- The OrangeFox busybox sources have been cloned successfully" || echo "-- Failed to clone the OrangeFox busybox sources!";
 }
 
 # get device trees
@@ -359,7 +378,7 @@ test_build() {
    # clone the device tree
    get_device_tree;
 
-   # proceed with the test build   
+   # proceed with the test build
    export FOX_VERSION="$FOX_BASE_VERSION"_"$FOX_DEF_BRANCH";
    export LC_ALL="C";
    export FOX_BUILD_TYPE="Alpha";
@@ -374,18 +393,18 @@ test_build() {
    echo "-- Compiling a test build for device \"$test_build_device\". This will take a *VERY* long time ...";
    echo "-- Start compiling: ";
    . build/envsetup.sh;
-   
+
    # what are we lunching (AOSP or Omni)>
    if [ "$FOX_BRANCH" = "fox_11.0" ]; then
    	lunch twrp_"$test_build_device"-eng;
    else
    	lunch omni_"$test_build_device"-eng;
    fi
-   
+
    # build for the device
    # are we building for a virtual A/B (VAB) device? (default is "no")
    local FOX_VAB_DEVICE=0;
-   if [ "$FOX_VAB_DEVICE" = "1" ]; then 
+   if [ "$FOX_VAB_DEVICE" = "1" ]; then
    	mka adbd bootimage;
    else
    	mka adbd recoveryimage;
@@ -416,6 +435,8 @@ WorkNow() {
     clone_fox_recovery;
 
     clone_fox_vendor;
+
+    clone_fox_busybox;
 
     # test_build; # comment this out - don't do a test build
 
