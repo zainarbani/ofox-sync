@@ -335,7 +335,7 @@ local BRANCH=$FOX_BRANCH;
 clone_fox_busybox() {
 local URL="";
 local BRANCH="android-9.0";
-   [ "$BASE_VER" -gt 9 ] && return; # no busybox for anything higher than 9.0!
+   [ "$BASE_VER" != "9" ] && return; # only clone busybox for 9.0
 
    if [ "$USE_SSH" = "0" ]; then
       URL="https://gitlab.com/OrangeFox/external/busybox.git";
