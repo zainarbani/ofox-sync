@@ -3,12 +3,12 @@
 # - Example script to sync updates to the minimal build system and OrangeFox sources
 # - There is very little error checking 
 # - Author:  DarthJabba9
-# - Version: generic:001
-# - Date:    12 December 2021
+# - Version: generic:002
+# - Date:    13 December 2021
 # ***************************************************************************************
 
 # the version number of this script
-SCRIPT_VERSION="20211212";
+SCRIPT_VERSION="20211213";
 
 # Our starting point (Fox base dir)
 BASE_DIR="$PWD";
@@ -92,10 +92,10 @@ local vendor=$MANIFEST_DIR/vendor/recovery;
   
   # manifest
   echo "- Updating the build manifest...";
+  echo "- You can ignore all errors relating to \"android_bootable_recovery\" or \"bootable/recovery\", etc ...";
   cd $MANIFEST_DIR && repo sync;
   
   # recovery sources
-  echo "- Updating the OrangeFox recovery sources. You can ignore all errors relating to \"android_bootable_recovery\", etc ...";
   cd $recovery && git pull --recurse-submodules;
 
   # vendor tree
