@@ -35,7 +35,39 @@ diff --git a/core/Makefile b/core/Makefile
    $(if $(filter true,$(BOARD_BUILD_SYSTEM_ROOT_IMAGE)),, \
      $(hide) ln -sf /system/bin/init $(TARGET_RECOVERY_ROOT_OUT)/init)
    $(if $(BOARD_RECOVERY_KERNEL_MODULES), \
-@@ -2090,6 +2116,22 @@ endif
+@@ -2024,6 +2050,31 @@ $(INSTALLED_BOOTIMAGE_TARGET): $(MKBOOTFS) $(MKBOOTIMG) $(MINIGZIP) \
+ 	$(call build-recoveryramdisk)
+ 	$(hide) $(MKBOOTFS) -d $(TARGET_OUT) $(TARGET_RECOVERY_ROOT_OUT) | $(RECOVERY_RAMDISK_COMPRESSOR) > $(recovery_ramdisk)
+ 	$(call build-recoveryimage-target, $@)
++
++# Darth9
++ifneq ($(NOT_ORANGEFOX),1)
++	$(BASH) $(FOX_VENDOR) FOX_VENDOR_CMD="Fox_After_Recovery_Image" \
++  	FOX_MANIFEST_VER="10.0" \
++  	BOARD_BOOT_HEADER_VERSION="$(BOARD_BOOT_HEADER_VERSION)" \
++  	TARGET_ARCH="$(TARGET_ARCH)" \
++	TARGET_RECOVERY_ROOT_OUT="$(TARGET_RECOVERY_ROOT_OUT)" \
++	MKBOOTIMG="$(MKBOOTIMG)" \
++	MKBOOTFS="$(MKBOOTFS)" \
++	INTERNAL_RECOVERYIMAGE_ARGS='"$(INTERNAL_RECOVERYIMAGE_ARGS)"' \
++	INTERNAL_MKBOOTIMG_VERSION_ARGS="$(INTERNAL_MKBOOTIMG_VERSION_ARGS)" \
++	BOARD_MKBOOTIMG_ARGS="$(BOARD_MKBOOTIMG_ARGS)" \
++	TARGET_OUT="$(TARGET_OUT)" \
++  	RECOVERY_RAMDISK_COMPRESSOR="$(RECOVERY_RAMDISK_COMPRESSOR)" \
++  	INSTALLED_RECOVERYIMAGE_TARGET="$(INSTALLED_RECOVERYIMAGE_TARGET)" \
++  	INSTALLED_BOOTIMAGE_TARGET="$(INSTALLED_BOOTIMAGE_TARGET)" \
++  	BOARD_BOOTIMAGE_PARTITION_SIZE=$(BOARD_BOOTIMAGE_PARTITION_SIZE) \
++  	BOARD_RECOVERYIMAGE_PARTITION_SIZE=$(BOARD_RECOVERYIMAGE_PARTITION_SIZE) \
++  	BOARD_USES_RECOVERY_AS_BOOT=$(BOARD_USES_RECOVERY_AS_BOOT) \
++  	INTERNAL_KERNEL_CMDLINE="$(INTERNAL_KERNEL_CMDLINE)" \
++  	recovery_ramdisk="$(recovery_ramdisk)"
++endif
++# Darth9
++
+ endif # BOARD_USES_RECOVERY_AS_BOOT
+
+ ifdef BOARD_INCLUDE_RECOVERY_DTBO
+@@ -2090,6 +2141,22 @@ endif
  .PHONY: recoveryimage
  recoveryimage: $(INSTALLED_RECOVERYIMAGE_TARGET) $(RECOVERY_RESOURCE_ZIP)
  
@@ -58,6 +90,17 @@ diff --git a/core/Makefile b/core/Makefile
  ifneq ($(BOARD_NAND_PAGE_SIZE),)
  $(error MTD device is no longer supported and thus BOARD_NAND_PAGE_SIZE is deprecated.)
  endif
+@@ -3222,6 +3289,10 @@ endif
+
+ # Appends os version and security patch level as a AVB property descriptor
+
++BOARD_AVB_RECOVERY_ADD_HASH_FOOTER_ARGS += \
++    --prop com.android.build.boot.os_version:$(PLATFORM_VERSION) \
++    --prop com.android.build.boot.security_patch:$(PLATFORM_SECURITY_PATCH)
++
+ BOARD_AVB_SYSTEM_ADD_HASHTREE_FOOTER_ARGS += \
+     --prop com.android.build.system.os_version:$(PLATFORM_VERSION) \
+     --prop com.android.build.system.security_patch:$(PLATFORM_SECURITY_PATCH)
 diff --git a/core/board_config.mk b/core/board_config.mk
 --- a/core/board_config.mk
 +++ b/core/board_config.mk
