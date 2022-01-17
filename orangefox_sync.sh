@@ -4,12 +4,12 @@
 # - Syncs the relevant twrp minimal manifest, and patches it for building OrangeFox
 # - Pulls in the OrangeFox recovery sources and vendor tree
 # - Author:  DarthJabba9
-# - Version: generic:004
-# - Date:    06 December 2021
+# - Version: generic:005
+# - Date:    17 January 2022
 # ***************************************************************************************
 
 # the version number of this script
-SCRIPT_VERSION="20211206";
+SCRIPT_VERSION="20220117";
 
 # the base version of the current OrangeFox
 FOX_BASE_VERSION="R11.1";
@@ -18,7 +18,7 @@ FOX_BASE_VERSION="R11.1";
 BASE_DIR="$PWD";
 
 # default directory for the new manifest
-MANIFEST_DIR="$BASE_DIR/fox_10.0";
+MANIFEST_DIR="";
 
 # functions to set up things for each supported manifest branch
 do_fox_110() {
@@ -28,9 +28,9 @@ do_fox_110() {
 	TWRP_BRANCH="twrp-11";
 	DEVICE_BRANCH="android-11";
 	test_build_device="vayu"; # the device whose tree we can clone for compiling a test build
-	MIN_MANIFEST="git://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git";
-	MANIFEST_DIR="$BASE_DIR/fox_11.0";
-	echo "-- NOTE: the \"$FOX_BRANCH\" branch is still BETA as far as virtual A/B (\"VAB\") devices are concerned. Treat it as such.";
+	MIN_MANIFEST="https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git";
+	[ -z "$MANIFEST_DIR" ] && MANIFEST_DIR="$BASE_DIR/fox_11.0";
+	echo "-- NOTE: the \"$FOX_BRANCH\" branch is still BETA as far as Virtual A/B (\"VAB\") devices are concerned. Treat it as such.";
 }
 
 do_fox_100() {
@@ -41,7 +41,7 @@ do_fox_100() {
 	DEVICE_BRANCH="android-10";
 	test_build_device="miatoll";
 	MIN_MANIFEST="https://github.com/minimal-manifest-twrp/platform_manifest_twrp_omni.git";
-	MANIFEST_DIR="$BASE_DIR/fox_10.0";
+	[ -z "$MANIFEST_DIR" ] && MANIFEST_DIR="$BASE_DIR/fox_10.0";
 }
 
 do_fox_90() {
@@ -52,7 +52,7 @@ do_fox_90() {
 	DEVICE_BRANCH="android-9.0";
 	test_build_device="mido";
 	MIN_MANIFEST="https://github.com/minimal-manifest-twrp/platform_manifest_twrp_omni.git";
-	MANIFEST_DIR="$BASE_DIR/fox_9.0";
+	[ -z "$MANIFEST_DIR" ] && MANIFEST_DIR="$BASE_DIR/fox_9.0";
 }
 
 do_fox_81() {
@@ -63,7 +63,7 @@ do_fox_81() {
 	DEVICE_BRANCH="android-8.1";
 	test_build_device="kenzo";
 	MIN_MANIFEST="https://github.com/minimal-manifest-twrp/platform_manifest_twrp_omni.git";
-	MANIFEST_DIR="$BASE_DIR/fox_8.1";
+	[ -z "$MANIFEST_DIR" ] && MANIFEST_DIR="$BASE_DIR/fox_8.1";
 }
 
 do_fox_71() {
@@ -74,7 +74,7 @@ do_fox_71() {
 	DEVICE_BRANCH="android-7.1";
 	test_build_device="hermes";
 	MIN_MANIFEST="https://github.com/minimal-manifest-twrp/platform_manifest_twrp_omni.git";
-	MANIFEST_DIR="$BASE_DIR/fox_7.1";
+	[ -z "$MANIFEST_DIR" ] && MANIFEST_DIR="$BASE_DIR/fox_7.1";
 }
 
 do_fox_60() {
@@ -85,7 +85,7 @@ do_fox_60() {
 	DEVICE_BRANCH="android-6.0";
 	test_build_device="klte";
 	MIN_MANIFEST="https://github.com/minimal-manifest-twrp/platform_manifest_twrp_omni.git";
-	MANIFEST_DIR="$BASE_DIR/fox_6.0";
+	[ -z "$MANIFEST_DIR" ] && MANIFEST_DIR="$BASE_DIR/fox_6.0";
 }
 
 # help
@@ -100,7 +100,7 @@ help_screen() {
   echo "    -b, -B, --branch <branch>		get the minimal manifest for '<branch>'";
   echo "    	'<branch>' must be one of the following branches:";
   echo "    		11.0";
-  echo "    		10.0 (this is the default)";
+  echo "    		10.0";
   echo "    		9.0";
   echo "    		8.1";
   echo "    		7.1";
@@ -109,8 +109,6 @@ help_screen() {
   echo "    $0 --branch 11.0 --path ~/OrangeFox_11 --ssh 1";
   echo "    $0 --branch 9.0 --path ~/OrangeFox/9.0 --debug";
   echo "";
-  echo "- The default manifest directory is \"$MANIFEST_DIR\"";
-  echo "- The default minimal manifest branch is \"twrp-10\"";
   echo "- You must supply an *absolute* path for the '--path' switch";
   exit 0;
 }
@@ -154,8 +152,9 @@ Process_CMD_Line() {
                 		elif [ "$1" = "7.1" ]; then do_fox_71;
                 		elif [ "$1" = "6.0" ]; then do_fox_60;
                 	else
-                  	   	echo "Invalid branch \"$1\". Defaulting to 10.0";
-                  	   	do_fox_100;
+                  	   	echo "Invalid branch \"$1\". Read the help screen below.";
+                  	   	echo "";
+                  	   	help_screen;
                 	fi
                 ;;
 
@@ -163,10 +162,19 @@ Process_CMD_Line() {
      shift
    done
 
-   if [ -z "$FOX_BRANCH" -o -z "$TWRP_BRANCH" -o -z "$DEVICE_BRANCH" ]; then
-   	echo "No branch has been specified. Defaulting to 10.0";
-   	do_fox_100;
+   # do we have all the necessary branch information?
+   if [ -z "$FOX_BRANCH" -o -z "$TWRP_BRANCH" -o -z "$DEVICE_BRANCH" -o -z "$FOX_DEF_BRANCH" ]; then
+   	echo "No branch has been specified. Read the help screen below.";
+   	echo "";
+   	help_screen;
    fi
+
+  # do we have a manifest directory?
+  if [ -z "$MANIFEST_DIR" ]; then
+   	echo "No path has been specified for the manifest. Read the help screen below.";
+   	echo "";
+   	help_screen;
+  fi
 }
 #######################################################################
 #######################################################################
@@ -181,9 +189,6 @@ abort() {
 update_environment() {
   # where to log the location of the manifest directory upon successful sync and patch
   SYNC_LOG="$BASE_DIR"/"$FOX_DEF_BRANCH"_"manifest.sav";
-
-  # do we have a manifest directory?
-  [ -z "$MANIFEST_DIR" ] && MANIFEST_DIR="$BASE_DIR/$FOX_DEF_BRANCH";
 
   # by default, don't use SSH for the "git clone" commands; to use SSH, you can also export USE_SSH=1 before starting
   [ -z "$USE_SSH" ] && USE_SSH="0";
