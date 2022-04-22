@@ -4,12 +4,15 @@
 # - Syncs the relevant twrp minimal manifest, and patches it for building OrangeFox
 # - Pulls in the OrangeFox recovery sources and vendor tree
 # - Author:  DarthJabba9
-# - Version: generic:005
-# - Date:    17 January 2022
+# - Version: generic:006
+# - Date:    22 April 2022
+#
+# 	* Changes for v006 (20220422) - start preparations for fox_12.1
+#
 # ***************************************************************************************
 
 # the version number of this script
-SCRIPT_VERSION="20220117";
+SCRIPT_VERSION="20220422";
 
 # the base version of the current OrangeFox
 FOX_BASE_VERSION="R11.1";
@@ -21,6 +24,18 @@ BASE_DIR="$PWD";
 MANIFEST_DIR="";
 
 # functions to set up things for each supported manifest branch
+do_fox_121() {
+	BASE_VER=12;
+	FOX_BRANCH="fox_12.1";
+	FOX_DEF_BRANCH="fox_12.1";
+	TWRP_BRANCH="twrp-12.1";
+	DEVICE_BRANCH="android-12.1";
+	test_build_device="miatoll"; # the device whose tree we can clone for compiling a test build
+	MIN_MANIFEST="https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git";
+	[ -z "$MANIFEST_DIR" ] && MANIFEST_DIR="$BASE_DIR/$FOX_DEF_BRANCH";
+	echo "-- NOTE: the \"$FOX_BRANCH\" branch is still BETA as far as Virtual A/B (\"VAB\") devices are concerned. Treat it as such.";
+}
+
 do_fox_110() {
 	BASE_VER=11;
 	FOX_BRANCH="fox_11.0";
@@ -29,7 +44,7 @@ do_fox_110() {
 	DEVICE_BRANCH="android-11";
 	test_build_device="vayu"; # the device whose tree we can clone for compiling a test build
 	MIN_MANIFEST="https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git";
-	[ -z "$MANIFEST_DIR" ] && MANIFEST_DIR="$BASE_DIR/fox_11.0";
+	[ -z "$MANIFEST_DIR" ] && MANIFEST_DIR="$BASE_DIR/$FOX_DEF_BRANCH";
 	echo "-- NOTE: the \"$FOX_BRANCH\" branch is still BETA as far as Virtual A/B (\"VAB\") devices are concerned. Treat it as such.";
 }
 
@@ -41,7 +56,7 @@ do_fox_100() {
 	DEVICE_BRANCH="android-10";
 	test_build_device="miatoll";
 	MIN_MANIFEST="https://github.com/minimal-manifest-twrp/platform_manifest_twrp_omni.git";
-	[ -z "$MANIFEST_DIR" ] && MANIFEST_DIR="$BASE_DIR/fox_10.0";
+	[ -z "$MANIFEST_DIR" ] && MANIFEST_DIR="$BASE_DIR/$FOX_DEF_BRANCH";
 }
 
 do_fox_90() {
@@ -52,7 +67,7 @@ do_fox_90() {
 	DEVICE_BRANCH="android-9.0";
 	test_build_device="mido";
 	MIN_MANIFEST="https://github.com/minimal-manifest-twrp/platform_manifest_twrp_omni.git";
-	[ -z "$MANIFEST_DIR" ] && MANIFEST_DIR="$BASE_DIR/fox_9.0";
+	[ -z "$MANIFEST_DIR" ] && MANIFEST_DIR="$BASE_DIR/$FOX_DEF_BRANCH";
 }
 
 do_fox_81() {
@@ -63,7 +78,7 @@ do_fox_81() {
 	DEVICE_BRANCH="android-8.1";
 	test_build_device="kenzo";
 	MIN_MANIFEST="https://github.com/minimal-manifest-twrp/platform_manifest_twrp_omni.git";
-	[ -z "$MANIFEST_DIR" ] && MANIFEST_DIR="$BASE_DIR/fox_8.1";
+	[ -z "$MANIFEST_DIR" ] && MANIFEST_DIR="$BASE_DIR/$FOX_DEF_BRANCH";
 }
 
 do_fox_71() {
@@ -74,7 +89,7 @@ do_fox_71() {
 	DEVICE_BRANCH="android-7.1";
 	test_build_device="hermes";
 	MIN_MANIFEST="https://github.com/minimal-manifest-twrp/platform_manifest_twrp_omni.git";
-	[ -z "$MANIFEST_DIR" ] && MANIFEST_DIR="$BASE_DIR/fox_7.1";
+	[ -z "$MANIFEST_DIR" ] && MANIFEST_DIR="$BASE_DIR/$FOX_DEF_BRANCH";
 }
 
 do_fox_60() {
@@ -85,7 +100,7 @@ do_fox_60() {
 	DEVICE_BRANCH="android-6.0";
 	test_build_device="klte";
 	MIN_MANIFEST="https://github.com/minimal-manifest-twrp/platform_manifest_twrp_omni.git";
-	[ -z "$MANIFEST_DIR" ] && MANIFEST_DIR="$BASE_DIR/fox_6.0";
+	[ -z "$MANIFEST_DIR" ] && MANIFEST_DIR="$BASE_DIR/$FOX_DEF_BRANCH";
 }
 
 # help
@@ -99,6 +114,7 @@ help_screen() {
   echo "    -p, -P, --path <absolute_path>	sync the minimal manifest into the directory '<absolute_path>'";
   echo "    -b, -B, --branch <branch>		get the minimal manifest for '<branch>'";
   echo "    	'<branch>' must be one of the following branches:";
+  echo "    		12.1";
   echo "    		11.0";
   echo "    		10.0";
   echo "    		9.0";
@@ -106,14 +122,14 @@ help_screen() {
   echo "    		7.1";
   echo "    		6.0";
   echo "Examples:";
+  echo "    $0 --branch 12.1 --path ~/OrangeFox_12.1";
   echo "    $0 --branch 11.0 --path ~/OrangeFox_11 --ssh 1";
   echo "    $0 --branch 9.0 --path ~/OrangeFox/9.0 --debug";
   echo "";
-  echo "- You must supply an *absolute* path for the '--path' switch";
+  echo "- You *must* supply an *absolute* path for the '--path' switch";
   exit 0;
 }
 
-#######################################################################
 #######################################################################
 # test the command line arguments
 Process_CMD_Line() {
@@ -145,7 +161,8 @@ Process_CMD_Line() {
              # branch
                 -b | -B | --branch)
                 	shift;
-                 	if [ "$1" = "11.0" ]; then do_fox_110;
+                 	if [ "$1" = "12.1" ]; then do_fox_121;
+               			elif [ "$1" = "11.0" ]; then do_fox_110;
                			elif [ "$1" = "10.0" ]; then do_fox_100;
                 		elif [ "$1" = "9.0" ]; then do_fox_90;
                 		elif [ "$1" = "8.1" ]; then do_fox_81;
@@ -176,7 +193,6 @@ Process_CMD_Line() {
    	help_screen;
   fi
 }
-#######################################################################
 #######################################################################
 
 # print message and quit
@@ -311,6 +327,8 @@ clone_fox_vendor() {
 local URL="";
 local BRANCH=$FOX_BRANCH;
    [ "$BASE_VER" -lt 10 ] && BRANCH="master"; # less than fox_10.0 use the "master" branch
+   
+   [ "$BASE_VER" = "12" ] && BRANCH="fox_11.0"; # use fox_11.0 branch for fox_12.1 vendor/recovery/
 
    if [ "$USE_SSH" = "0" ]; then
       URL="https://gitlab.com/OrangeFox/vendor/recovery.git";
@@ -433,13 +451,13 @@ WorkNow() {
 
     clone_common;
 
-    clone_fox_recovery;
+    [ "$BASE_VER" != "12" ] && clone_fox_recovery; # no fox_12.1 yet
 
     clone_fox_vendor;
 
     clone_fox_busybox;
 
-    # test_build; # comment this out - don't do a test build
+    # test_build; # comment this out - don't do a test build by default
 
     local STOP=$(date);
     echo "-- Stop time =$STOP";
