@@ -4,15 +4,15 @@
 # - Syncs the relevant twrp minimal manifest, and patches it for building OrangeFox
 # - Pulls in the OrangeFox recovery sources and vendor tree
 # - Author:  DarthJabba9
-# - Version: generic:006
-# - Date:    22 April 2022
+# - Version: generic:007
+# - Date:    30 April 2022
 #
-# 	* Changes for v006 (20220422) - start preparations for fox_12.1
+# 	* Changes for v007 (20220430) - make it clear that fox_12.1 is not ready
 #
 # ***************************************************************************************
 
 # the version number of this script
-SCRIPT_VERSION="20220422";
+SCRIPT_VERSION="20220430";
 
 # the base version of the current OrangeFox
 FOX_BASE_VERSION="R11.1";
@@ -25,6 +25,9 @@ MANIFEST_DIR="";
 
 # functions to set up things for each supported manifest branch
 do_fox_121() {
+	echo "ERROR: fox_12.1 is not ready. Quitting.";
+	exit 1;
+
 	BASE_VER=12;
 	FOX_BRANCH="fox_12.1";
 	FOX_DEF_BRANCH="fox_12.1";
