@@ -330,8 +330,6 @@ local URL="";
 local BRANCH=$FOX_BRANCH;
    [ "$BASE_VER" -lt 10 ] && BRANCH="master"; # less than fox_10.0 use the "master" branch
    
-   [ "$BASE_VER" = "12" ] && BRANCH="fox_11.0"; # use fox_11.0 branch for fox_12.1 vendor/recovery/
-
    if [ "$USE_SSH" = "0" ]; then
       URL="https://gitlab.com/OrangeFox/vendor/recovery.git";
    else
@@ -416,7 +414,7 @@ test_build() {
    . build/envsetup.sh;
 
    # what are we lunching (AOSP or Omni)>
-   if [ "$FOX_BRANCH" = "fox_11.0" ]; then
+   if [ "$BASE_VER" -gt 10 ]; then
    	lunch twrp_"$test_build_device"-eng;
    else
    	lunch omni_"$test_build_device"-eng;

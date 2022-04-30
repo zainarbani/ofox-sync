@@ -9,7 +9,7 @@ diff --git a/core/Makefile b/core/Makefile
 +# Darth9
 +ifneq ($(NOT_ORANGEFOX),1)
 +	$(BASH) $(FOX_VENDOR) FOX_VENDOR_CMD="Fox_Before_Recovery_Image" \
-+  	FOX_MANIFEST_VER="11.0" \
++  	FOX_MANIFEST_VER="12.1" \
 +  	BOARD_BOOT_HEADER_VERSION="$(BOARD_BOOT_HEADER_VERSION)" \
 +  	TARGET_ARCH="$(TARGET_ARCH)" \
 +	TARGET_RECOVERY_ROOT_OUT="$(TARGET_RECOVERY_ROOT_OUT)" \
@@ -40,7 +40,7 @@ diff --git a/core/Makefile b/core/Makefile
 +# Darth9
 +ifneq ($(NOT_ORANGEFOX),1)
 +	$(BASH) $(FOX_VENDOR) FOX_VENDOR_CMD="Fox_After_Recovery_Image" \
-+  	FOX_MANIFEST_VER="11.0" \
++  	FOX_MANIFEST_VER="12.1" \
 +  	BOARD_BOOT_HEADER_VERSION="$(BOARD_BOOT_HEADER_VERSION)" \
 +  	TARGET_ARCH="$(TARGET_ARCH)" \
 +	TARGET_RECOVERY_ROOT_OUT="$(TARGET_RECOVERY_ROOT_OUT)" \
@@ -72,7 +72,7 @@ diff --git a/core/Makefile b/core/Makefile
 +ifneq ($(NOT_ORANGEFOX),1)
 +ifneq ($(BOARD_USES_RECOVERY_AS_BOOT),true)
 +	$(BASH) $(FOX_VENDOR) FOX_VENDOR_CMD="Fox_After_Recovery_Image" \
-+  	FOX_MANIFEST_VER="11.0" \
++  	FOX_MANIFEST_VER="12.1" \
 +  	BOARD_BOOT_HEADER_VERSION="$(BOARD_BOOT_HEADER_VERSION)" \
 +  	TARGET_ARCH="$(TARGET_ARCH)" \
 +	TARGET_RECOVERY_ROOT_OUT="$(TARGET_RECOVERY_ROOT_OUT)" \
@@ -111,7 +111,7 @@ diff --git a/core/config.mk b/core/config.mk
 +  FOX_VENDOR :=
 +  BASH :=
 +else
-+  FOX_VENDOR := vendor/recovery/OrangeFox_A11.sh
++  FOX_VENDOR := vendor/recovery/OrangeFox_A12.sh
 +  BASH := bash
 +endif
 +# Darth9
@@ -143,7 +143,7 @@ diff --git a/make/envsetup.sh b/make/envsetup.sh
  . $ANDROID_BUILD_TOP/vendor/twrp/build/envsetup.sh
 +
 +# Darth9
-+# prepare environment variables for importing to OrangeFox_A11.sh
++# prepare environment variables for importing to OrangeFox_A12.sh
 +function orangefox_envsetup() {
 +
 +    export FOX_MANIFEST_ROOT=$(gettop)
