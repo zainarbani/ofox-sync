@@ -117,7 +117,6 @@ help_screen() {
   echo "    -p, -P, --path <absolute_path>	sync the minimal manifest into the directory '<absolute_path>'";
   echo "    -b, -B, --branch <branch>		get the minimal manifest for '<branch>'";
   echo "    	'<branch>' must be one of the following branches:";
-  echo "    		12.1";
   echo "    		11.0";
   echo "    		10.0";
   echo "    		9.0";
@@ -125,8 +124,8 @@ help_screen() {
   echo "    		7.1";
   echo "    		6.0";
   echo "Examples:";
-  echo "    $0 --branch 12.1 --path ~/OrangeFox_12.1";
-  echo "    $0 --branch 11.0 --path ~/OrangeFox_11 --ssh 1";
+  echo "    $0 --branch 11.0 --path ~/OrangeFox_11.0";
+  echo "    $0 --branch 10.0 --path ~/OrangeFox_10 --ssh 1";
   echo "    $0 --branch 9.0 --path ~/OrangeFox/9.0 --debug";
   echo "";
   echo "- You *must* supply an *absolute* path for the '--path' switch";
