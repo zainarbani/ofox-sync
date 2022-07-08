@@ -4,17 +4,18 @@
 # - Syncs the relevant twrp minimal manifest, and patches it for building OrangeFox
 # - Pulls in the OrangeFox recovery sources and vendor tree
 # - Author:  DarthJabba9
-# - Version: generic:009
+# - Version: generic:010
 # - Date:    08 July 2022
 #
 # 	* Changes for v007 (20220430) - make it clear that fox_12.1 is not ready
 # 	* Changes for v008 (20220708) - fox_12.1 is now ready
 # 	* Changes for v009 (20220708A) - try to cherry-pick the system vold stuff from gerrit
+# 	* Changes for v010 (20220708B) - move the cherry-pick call
 #
 # ***************************************************************************************
 
 # the version number of this script
-SCRIPT_VERSION="20220708A";
+SCRIPT_VERSION="20220708B";
 
 # the base version of the current OrangeFox
 FOX_BASE_VERSION="R11.1";
@@ -463,8 +464,6 @@ WorkNow() {
 
     patch_minimal_manifest;
 
-    cherry_picks;
-
     clone_common;
 
     clone_fox_recovery;
@@ -472,6 +471,8 @@ WorkNow() {
     clone_fox_vendor;
 
     clone_fox_busybox;
+
+    cherry_picks;
 
     # test_build; # comment this out - don't do a test build by default
 
