@@ -1,7 +1,7 @@
 diff --git a/core/Makefile b/core/Makefile
 --- a/core/Makefile
 +++ b/core/Makefile
-@@ -2220,6 +2220,30 @@ $(INTERNAL_RECOVERY_RAMDISK_FILES_TIMESTAMP): $(MKBOOTFS) $(COMPRESSION_COMMAND_
+@@ -2236,6 +2236,30 @@ $(INTERNAL_RECOVERY_RAMDISK_FILES_TIMESTAMP): $(MKBOOTFS) \
  	# Use rsync because "cp -Rf" fails to overwrite broken symlinks on Mac.
  	rsync -a --exclude=sdcard $(IGNORE_RECOVERY_SEPOLICY) $(IGNORE_CACHE_LINK) $(TARGET_ROOT_OUT) $(TARGET_RECOVERY_OUT)
  	# Modifying ramdisk contents...
@@ -32,7 +32,7 @@ diff --git a/core/Makefile b/core/Makefile
  	$(if $(filter true,$(BOARD_BUILD_SYSTEM_ROOT_IMAGE)),, \
  	  ln -sf /system/bin/init $(TARGET_RECOVERY_ROOT_OUT)/init)
  	# Removes $(TARGET_RECOVERY_ROOT_OUT)/init*.rc EXCEPT init.recovery*.rc.
-@@ -2307,6 +2331,31 @@ $(foreach b,$(INSTALLED_BOOTIMAGE_TARGET), $(eval $(call add-dependency,$(b),$(c
+@@ -2330,6 +2354,31 @@ $(foreach b,$(INSTALLED_BOOTIMAGE_TARGET), $(eval $(call add-dependency,$(b),$(c
  $(INSTALLED_BOOTIMAGE_TARGET): $(recoveryimage-deps)
  	$(call pretty,"Target boot image from recovery: $@")
  	$(call build-recoveryimage-target, $@, $(PRODUCT_OUT)/$(subst .img,,$(subst boot,kernel,$(notdir $@))))
@@ -63,8 +63,8 @@ diff --git a/core/Makefile b/core/Makefile
 +
  endif # BOARD_USES_RECOVERY_AS_BOOT
  
- $(INSTALLED_RECOVERYIMAGE_TARGET): $(recoveryimage-deps)
-@@ -2333,6 +2382,32 @@ endif # BUILDING_RECOVERY_IMAGE
+ ifndef BOARD_CUSTOM_BOOTIMG_MK
+@@ -2360,6 +2409,32 @@ endif # BUILDING_RECOVERY_IMAGE
  .PHONY: recoveryimage
  recoveryimage: $(INSTALLED_RECOVERYIMAGE_TARGET) $(RECOVERY_RESOURCE_ZIP)
  
@@ -100,7 +100,7 @@ diff --git a/core/Makefile b/core/Makefile
 diff --git a/core/config.mk b/core/config.mk
 --- a/core/config.mk
 +++ b/core/config.mk
-@@ -605,6 +605,18 @@ EXTRACT_KERNEL := build/make/tools/extract_kernel.py
+@@ -606,6 +606,18 @@ EXTRACT_KERNEL := build/make/tools/extract_kernel.py
  # Path to tools.jar
  HOST_JDK_TOOLS_JAR := $(ANDROID_JAVA8_HOME)/lib/tools.jar
  
