@@ -4,15 +4,16 @@
 # - Syncs the relevant twrp minimal manifest, and patches it for building OrangeFox
 # - Pulls in the OrangeFox recovery sources and vendor tree
 # - Author:  DarthJabba9
-# - Version: generic:007
-# - Date:    30 April 2022
+# - Version: generic:008
+# - Date:    08 July 2022
 #
 # 	* Changes for v007 (20220430) - make it clear that fox_12.1 is not ready
+# 	* Changes for v008 (20220708) - fox_12.1 is now ready
 #
 # ***************************************************************************************
 
 # the version number of this script
-SCRIPT_VERSION="20220430";
+SCRIPT_VERSION="20220708";
 
 # the base version of the current OrangeFox
 FOX_BASE_VERSION="R11.1";
@@ -25,9 +26,6 @@ MANIFEST_DIR="";
 
 # functions to set up things for each supported manifest branch
 do_fox_121() {
-	echo "ERROR: fox_12.1 is not ready. Quitting.";
-	exit 1;
-
 	BASE_VER=12;
 	FOX_BRANCH="fox_12.1";
 	FOX_DEF_BRANCH="fox_12.1";
@@ -36,7 +34,7 @@ do_fox_121() {
 	test_build_device="miatoll"; # the device whose tree we can clone for compiling a test build
 	MIN_MANIFEST="https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git";
 	[ -z "$MANIFEST_DIR" ] && MANIFEST_DIR="$BASE_DIR/$FOX_DEF_BRANCH";
-	echo "-- NOTE: the \"$FOX_BRANCH\" branch is still BETA as far as Virtual A/B (\"VAB\") devices are concerned. Treat it as such.";
+	echo "-- NOTE: the \"$FOX_BRANCH\" branch is still work-in-progress, and will stay for some time at the Beta stage. Treat it as such.";
 }
 
 do_fox_110() {
@@ -117,6 +115,7 @@ help_screen() {
   echo "    -p, -P, --path <absolute_path>	sync the minimal manifest into the directory '<absolute_path>'";
   echo "    -b, -B, --branch <branch>		get the minimal manifest for '<branch>'";
   echo "    	'<branch>' must be one of the following branches:";
+  echo "    		12.1";
   echo "    		11.0";
   echo "    		10.0";
   echo "    		9.0";
@@ -124,6 +123,7 @@ help_screen() {
   echo "    		7.1";
   echo "    		6.0";
   echo "Examples:";
+  echo "    $0 --branch 12.1 --path ~/OrangeFox_12.1";
   echo "    $0 --branch 11.0 --path ~/OrangeFox_11.0";
   echo "    $0 --branch 10.0 --path ~/OrangeFox_10 --ssh 1";
   echo "    $0 --branch 9.0 --path ~/OrangeFox/9.0 --debug";
@@ -451,7 +451,7 @@ WorkNow() {
 
     clone_common;
 
-    [ "$BASE_VER" != "12" ] && clone_fox_recovery; # no fox_12.1 yet
+    clone_fox_recovery;
 
     clone_fox_vendor;
 
@@ -463,6 +463,10 @@ WorkNow() {
     echo "-- Stop time =$STOP";
     echo "-- Start time=$START";
     echo "-- Now, clone your device trees to the correct locations!";
+    if [ "$BASE_VER" = "12" ]; then
+       echo "Now, you must cherry-pick this commit in build/system/vold/: https://gerrit.twrp.me/c/android_system_vold/+/5540";
+    fi
+
     exit 0;
 }
 
