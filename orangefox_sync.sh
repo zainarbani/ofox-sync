@@ -4,18 +4,19 @@
 # - Syncs the relevant twrp minimal manifest, and patches it for building OrangeFox
 # - Pulls in the OrangeFox recovery sources and vendor tree
 # - Author:  DarthJabba9
-# - Version: generic:010
-# - Date:    08 July 2022
+# - Version: generic:011
+# - Date:    31 July 2022
 #
-# 	* Changes for v007 (20220430) - make it clear that fox_12.1 is not ready
-# 	* Changes for v008 (20220708) - fox_12.1 is now ready
+# 	* Changes for v007 (20220430)  - make it clear that fox_12.1 is not ready
+# 	* Changes for v008 (20220708)  - fox_12.1 is now ready
 # 	* Changes for v009 (20220708A) - try to cherry-pick the system vold stuff from gerrit
 # 	* Changes for v010 (20220708B) - move the cherry-pick call
+# 	* Changes for v011 (20220731)  - update the system vold patchset number
 #
 # ***************************************************************************************
 
 # the version number of this script
-SCRIPT_VERSION="20220708B";
+SCRIPT_VERSION="20220731";
 
 # the base version of the current OrangeFox
 FOX_BASE_VERSION="R11.1";
@@ -402,7 +403,7 @@ cherry_picks() {
   echo "You need to cherry-pick this commit into system/vold/: https://gerrit.twrp.me/c/android_system_vold/+/5540";
   echo "I will try to do so now. If any errors occur, then you should abort the cherry-pick and then do it manually.";
 
-  local patchset=7; # the current patch set number
+  local patchset=10; # the current patch set number
   cd $MANIFEST_DIR/system/vold/;
   git fetch https://gerrit.twrp.me/android_system_vold refs/changes/40/5540/$patchset && git cherry-pick FETCH_HEAD;
 }
