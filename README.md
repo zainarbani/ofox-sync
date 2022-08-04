@@ -51,6 +51,11 @@ Notes:
 	cd ~/fox_11.0/
 	repo sync # (ignore all errors and suggestions relating to "android_bootable_recovery")
 
+### For fox_12.1, if you run "repo sync" after initial installation, you will also need to pick the system vold commits again
+Example:
+	cd ~/fox_12.1/system/vold
+	git fetch https://gerrit.twrp.me/android_system_vold refs/changes/40/5540/10 && git cherry-pick FETCH_HEAD
+
 ## To see the syntax of the orangefox_sync.sh script, follow these steps: ##
 ----------------------------------
 	cd ~/OrangeFox_sync/sync/
