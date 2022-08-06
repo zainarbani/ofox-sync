@@ -407,6 +407,9 @@ cherry_picks() {
   local patchset=12; # the current patch set number
   cd $MANIFEST_DIR/system/vold/;
   git fetch https://gerrit.twrp.me/android_system_vold refs/changes/40/5540/$patchset && git cherry-pick FETCH_HEAD;
+
+  echo ""
+  echo "Every time you run 'repo sync', you must also cherry-pick this commit into system/vold/: https://gerrit.twrp.me/c/android_system_vold/+/5540";
 }
 
 # test build
