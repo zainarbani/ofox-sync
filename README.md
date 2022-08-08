@@ -33,6 +33,7 @@ Notes:
 	repo sync # (ignore all errors and suggestions relating to "android_bootable_recovery")
 	cd ~/fox_11.0/bootable/recovery/
 	git pull --recurse-submodules
+	git submodule foreach --recursive git pull origin master
 	cd ~/fox_11.0/vendor/recovery/
 	git pull
 
@@ -40,6 +41,7 @@ Notes:
 ----------------------------------
 	cd ~/fox_11.0/bootable/recovery/
 	git pull --recurse-submodules
+	git submodule foreach --recursive git pull origin master
 
 ## To update only the vendor tree (given the example of the 11.0 branch above) follow these steps: ##
 ----------------------------------
@@ -53,7 +55,7 @@ Notes:
 
 ### For fox_12.1, if you run "repo sync" after initial installation, you will also need to pick the system vold commits again (see example below)
 	cd ~/fox_12.1/system/vold
-	git fetch https://gerrit.twrp.me/android_system_vold refs/changes/40/5540/10 && git cherry-pick FETCH_HEAD
+	git fetch https://gerrit.twrp.me/android_system_vold refs/changes/40/5540/12 && git cherry-pick FETCH_HEAD
 
 ## To see the syntax of the orangefox_sync.sh script, follow these steps: ##
 ----------------------------------
