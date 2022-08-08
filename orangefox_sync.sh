@@ -4,7 +4,7 @@
 # - Syncs the relevant twrp minimal manifest, and patches it for building OrangeFox
 # - Pulls in the OrangeFox recovery sources and vendor tree
 # - Author:  DarthJabba9
-# - Version: generic:012
+# - Version: generic:013
 # - Date:    08 August 2022
 #
 # 	* Changes for v007 (20220430)  - make it clear that fox_12.1 is not ready
@@ -13,11 +13,12 @@
 # 	* Changes for v010 (20220708B) - move the cherry-pick call
 # 	* Changes for v011 (20220731)  - update the system vold patchset number to 10
 # 	* Changes for v012 (20220806)  - update the system vold patchset number to 12
+# 	* Changes for v013 (20220803)  - try to ensure that the submodules are updated
 #
 # ***************************************************************************************
 
 # the version number of this script
-SCRIPT_VERSION="20220806";
+SCRIPT_VERSION="20220808";
 
 # the base version of the current OrangeFox
 FOX_BASE_VERSION="R11.1";
@@ -318,6 +319,13 @@ local BRANCH=$FOX_BRANCH;
       	[ -d recovery/gui/theme ] && rm -rf recovery/gui/theme;
       	git clone $URL recovery/gui/theme;
       	[ "$?" = "0" ] && echo "-- The themes have been cloned successfully" || echo "-- Failed to clone the themes!";
+   fi
+
+   # ensure that the submodules are updated
+   if [ -d $MANIFEST_DIR/bootable/recovery/gui/theme ]; then
+      cd $MANIFEST_DIR/bootable/recovery/;
+      git submodule foreach --recursive git pull origin master;
+      cd $MANIFEST_DIR/bootable/;
    fi
 
    # cleanup /tmp/recovery/
