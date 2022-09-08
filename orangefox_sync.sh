@@ -4,8 +4,8 @@
 # - Syncs the relevant twrp minimal manifest, and patches it for building OrangeFox
 # - Pulls in the OrangeFox recovery sources and vendor tree
 # - Author:  DarthJabba9
-# - Version: generic:013
-# - Date:    08 August 2022
+# - Version: generic:014
+# - Date:    08 September 2022
 #
 # 	* Changes for v007 (20220430)  - make it clear that fox_12.1 is not ready
 # 	* Changes for v008 (20220708)  - fox_12.1 is now ready
@@ -14,11 +14,12 @@
 # 	* Changes for v011 (20220731)  - update the system vold patchset number to 10
 # 	* Changes for v012 (20220806)  - update the system vold patchset number to 12
 # 	* Changes for v013 (20220803)  - try to ensure that the submodules are updated
+# 	* Changes for v014 (20220908)  - don't apply the system vold patch: it is no longer needed
 #
 # ***************************************************************************************
 
 # the version number of this script
-SCRIPT_VERSION="20220808";
+SCRIPT_VERSION="20220908";
 
 # the base version of the current OrangeFox
 FOX_BASE_VERSION="R11.1";
@@ -133,7 +134,7 @@ help_screen() {
   echo "    $0 --branch 10.0 --path ~/OrangeFox_10 --ssh 1";
   echo "    $0 --branch 9.0 --path ~/OrangeFox/9.0 --debug";
   echo "";
-  echo "- You *must* supply an *absolute* path for the '--path' switch";
+  echo "- You *MUST* supply an *ABSOLUTE* path for the '--path' switch";
   exit 0;
 }
 
@@ -485,7 +486,7 @@ WorkNow() {
 
     clone_fox_busybox;
 
-    cherry_picks;
+    # cherry_picks; # 20220908 - comment this out: no longer needed
 
     # test_build; # comment this out - don't do a test build by default
 

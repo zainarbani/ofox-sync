@@ -12,7 +12,7 @@
 	cd ~/OrangeFox_sync/sync/
 	./orangefox_sync.sh --branch 11.0 --path ~/fox_11.0
 Notes:
-- You must supply an *absolute* path name for the "--path" switch
+- You *MUST* supply an *ABSOLUTE* path name for the "--path" switch
 - If the sync process gets stuck, you might need to terminate it with Ctrl-C and then run the script again
 - If you want to use ssh for cloning the OrangeFox sources and vendor tree, export "USE_SSH=1" before starting, or supply "--ssh 1" on the command line
 - After the initial sync process, you must then clone your device trees, before you can build for your device
@@ -52,10 +52,6 @@ Notes:
 ----------------------------------
 	cd ~/fox_11.0/
 	repo sync # (ignore all errors and suggestions relating to "android_bootable_recovery")
-
-### For fox_12.1, if you run "repo sync" after initial installation, you will also need to pick the system vold commits again (see example below)
-	cd ~/fox_12.1/system/vold
-	git fetch https://gerrit.twrp.me/android_system_vold refs/changes/40/5540/12 && git cherry-pick FETCH_HEAD
 
 ## To see the syntax of the orangefox_sync.sh script, follow these steps: ##
 ----------------------------------
