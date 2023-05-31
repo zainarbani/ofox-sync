@@ -27,16 +27,14 @@ Notes:
 	cd ~/fox_11.0/
 	repo sync # (ignore all errors and suggestions relating to "android_bootable_recovery")
 	cd ~/fox_11.0/bootable/recovery/
-	git pull --recurse-submodules
-	git submodule foreach --recursive git pull origin master
+	git pull
 	cd ~/fox_11.0/vendor/recovery/
 	git pull
 
 ## To update only the recovery sources (given the example of the 11.0 branch above), follow these steps: ##
 ----------------------------------
 	cd ~/fox_11.0/bootable/recovery/
-	git pull --recurse-submodules
-	git submodule foreach --recursive git pull origin master
+	git pull
 
 ## To update only the vendor tree (given the example of the 11.0 branch above) follow these steps: ##
 ----------------------------------
