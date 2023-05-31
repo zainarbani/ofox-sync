@@ -3,12 +3,12 @@
 # - Example script to sync updates to the minimal build system and OrangeFox sources
 # - There is very little error checking 
 # - Author:  DarthJabba9
-# - Version: generic:004
-# - Date:    06 December 2022
+# - Version: generic:005
+# - Date:    31 May 2023
 # ***************************************************************************************
 
 # the version number of this script
-SCRIPT_VERSION="20221206";
+SCRIPT_VERSION="20230531";
 
 # Our starting point (Fox base dir)
 BASE_DIR="$PWD";
@@ -85,9 +85,9 @@ local recovery=$MANIFEST_DIR/bootable/recovery;
 local vendor=$MANIFEST_DIR/vendor/recovery;
 
   if [ ! -d "$recovery" ]; then
-     abort "- Invalid recovery directory: \"$recovery\". Quitting."
+     abort "- Invalid recovery directory: \"$recovery\". Quitting.";
   elif [ ! -d "$vendor" ]; then
-     abort "- Invalid vendor directory: \"$vendor\". Quitting."
+     abort "- Invalid vendor directory: \"$vendor\". Quitting.";
   fi
   
   # manifest
@@ -96,8 +96,8 @@ local vendor=$MANIFEST_DIR/vendor/recovery;
   cd $MANIFEST_DIR && repo sync;
   
   # recovery sources
-  cd $recovery && git pull --recurse-submodules && git submodule foreach --recursive git pull origin master;
-
+  cd $recovery && git pull;
+  
   # vendor tree
   echo "- Updating the OrangeFox vendor tree ...";
   cd $vendor && git pull;

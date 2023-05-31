@@ -4,8 +4,8 @@
 # - Syncs the relevant twrp minimal manifest, and patches it for building OrangeFox
 # - Pulls in the OrangeFox recovery sources and vendor tree
 # - Author:  DarthJabba9
-# - Version: generic:015
-# - Date:    06 December 2022
+# - Version: generic:016
+# - Date:    31 May 2023
 #
 # 	* Changes for v007 (20220430)  - make it clear that fox_12.1 is not ready
 # 	* Changes for v008 (20220708)  - fox_12.1 is now ready
@@ -16,11 +16,12 @@
 # 	* Changes for v013 (20220803)  - try to ensure that the submodules are updated
 # 	* Changes for v014 (20220908)  - don't apply the system vold patch: it is no longer needed
 # 	* Changes for v015 (20221206)  - remove support for manifests earlier than 11.0; only fox_11.0 and fox_12.1 are now officially supported
+# 	* Changes for v016 (20230531)  - dispense with the submodules stuff
 #
 # ***************************************************************************************
 
 # the version number of this script
-SCRIPT_VERSION="20221206";
+SCRIPT_VERSION="20230531";
 
 # the base version of the current OrangeFox
 FOX_BASE_VERSION="R11.1";
@@ -244,28 +245,8 @@ local BRANCH=$FOX_BRANCH;
    }
 
    echo "-- Pulling the OrangeFox recovery sources ...";
-   git clone --recurse-submodules $URL -b $BRANCH recovery;
+   git clone $URL -b $BRANCH recovery;
    [ "$?" = "0" ] && echo "-- The OrangeFox sources have been cloned successfully" || echo "-- Failed to clone the OrangeFox sources!";
-
-   # check that the themes are correctly downloaded
-   if [ ! -f recovery/gui/theme/portrait_hdpi/ui.xml ]; then
-      	echo "-- Themes not found! Trying again to pull the themes ...";
-   	if [ "$USE_SSH" = "0" ]; then
-      	   URL="https://gitlab.com/OrangeFox/misc/theme.git";
-   	else
-      	   URL="git@gitlab.com:OrangeFox/misc/theme.git";
-   	fi
-      	[ -d recovery/gui/theme ] && rm -rf recovery/gui/theme;
-      	git clone $URL recovery/gui/theme;
-      	[ "$?" = "0" ] && echo "-- The themes have been cloned successfully" || echo "-- Failed to clone the themes!";
-   fi
-
-   # ensure that the submodules are updated
-   if [ -d $MANIFEST_DIR/bootable/recovery/gui/theme ]; then
-      cd $MANIFEST_DIR/bootable/recovery/;
-      git submodule foreach --recursive git pull origin master;
-      cd $MANIFEST_DIR/bootable/;
-   fi
 
    # cleanup /tmp/recovery/
    echo  "-- Cleaning up the TWRP recovery sources from /tmp";
