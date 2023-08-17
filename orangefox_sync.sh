@@ -33,7 +33,7 @@ BASE_DIR="$PWD";
 MANIFEST_DIR="";
 
 # the twrp minimal manifest
-MIN_MANIFEST="https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git";
+MIN_MANIFEST="https://github.com/zainarbani/platform_manifest_twrp_aosp.git";
 
 # functions to set up things for each supported manifest branch
 do_fox_121() {
